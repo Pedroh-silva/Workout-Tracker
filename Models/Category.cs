@@ -9,7 +9,7 @@ namespace WorkoutTracker.Models
         [Display(Name = "Nome")]
         public string? Name { get; set; }
         [Display(Name = "Cor")]
-        public string Color { get; set; }
+        public string? Color { get; set; }
         public ICollection<Workout> Workouts { get; set; } = new List<Workout>();
 
         public Category()

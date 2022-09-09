@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<WorkoutTrackerDbContext>(options => options.UseSqlServer("Server=localhost;Database=db_Workout-Tracker;Trusted_Connection=True;"));
+builder.Services.AddDbContext<WorkoutTrackerDbContext>(options => options.UseSqlServer("Server=localhost;Database=db_Workout_Tracker;Trusted_Connection=True;"));
 
 var app = builder.Build();
 
