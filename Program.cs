@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using WorkoutTracker.Data;
+using WorkoutTracker.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<WorkoutTrackerDbContext>(options => options.UseSqlServer("Server=localhost;Database=db_Workout_Tracker;Trusted_Connection=True;"));
-
+builder.Services.AddScoped<WorkoutService>();
+builder.Services.AddScoped<ExerciseService>();
+builder.Services.AddScoped<CategoryService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -27,6 +30,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Workouts}/{action=Index}/{id?}");
 
 app.Run();
