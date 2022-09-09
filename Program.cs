@@ -1,7 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+using WorkoutTracker.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<WorkoutTrackerDbContext>(options => options.UseSqlServer("Server=localhost;Database=db_Workout-Tracker;Trusted_Connection=True;"));
 
 var app = builder.Build();
 
