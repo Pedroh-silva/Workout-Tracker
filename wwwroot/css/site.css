@@ -10,6 +10,8 @@
     --scroll-bar-active: #9B9B9B;
     --btn-adicionar: #014d22;
     --btn-adicionar-hover: #01c657;
+    --btn-estatistica: #350347;
+    --btn-estatistica-hover: #9447af;
 }
 
 .darkmode:root {
@@ -24,6 +26,8 @@
     --scroll-bar-active: #302E2E;
     --btn-adicionar: #003417;
     --btn-adicionar-hover: #008B3D;
+    --btn-estatistica: #350347;
+    --btn-estatistica-hover: #9447af;
 }
 
 html {

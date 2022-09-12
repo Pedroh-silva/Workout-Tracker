@@ -95,5 +95,7 @@ namespace WorkoutTracker.Controllers
                 return View();
             }
         }
+        //TODO: Add controllers for statistic and AddByCategory
+
     }
 }

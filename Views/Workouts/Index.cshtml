@@ -1,23 +1,31 @@
 ﻿@model List<WorkoutTracker.Models.Workout>
 <link rel="stylesheet" href='~/css/style.css' />
+@{
+	//TODO: Add button for dark mode
+	//TODO: Create Modal for edition and exclusion
+}
 
 <h1>Histórico de Treino</h1>
 <hr />
 
-<section class="align-buttons">
-	<a class="btn btn-adicionar">Adicionar treino</a>
-</section>	
+<section class="buttons">
+	<a asp-action="Create" class="btn btn-adicionar">Adicionar treino</a>
+	<a asp-action="AddByCategory" class="btn btn-adicionar">Adicionar pela categoria</a>
+	<a asp-action="Statistic" class="btn btn-estatistica">Estatísticas</a>
+</section>
 
 <section class="flex-center">
 	<div class="flex-column">
 		<div class="boxTreino">
-			<p>Treino Peito</p>
+			<p style="font-weight:500">Treino Peito</p>
 			<div class="details">
 				<p>Tempo: 00:40</p>
-				<p>Data: 12/09/2022</p>
-				<p>3 exercícios</p>
+				<p>Data: 12/09/2022 17:28</p>
+				<p class="exercicios"><i class='fas fa-angle-double-right'></i> 3 exercícios</p>
 				<p>Categoria: Nome da categoria</p>
 			</div>
+			<i class='fas fa-pen'></i>
 		</div>
 	</div>
 </section>
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
