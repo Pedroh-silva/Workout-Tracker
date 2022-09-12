@@ -16,6 +16,11 @@ namespace WorkoutTracker.Services
         {
             return await _context.Category!.OrderByDescending(x => x.Name).ToListAsync();
         }
+        public async Task<Category> FindByIdAsync(int id)
+        {
+            var category = await _context.Category!.FirstOrDefaultAsync(x => x.Id == id);
+            return category!;
+        }
         public async Task Insert(Category category)
         {
             _context.Add(category);

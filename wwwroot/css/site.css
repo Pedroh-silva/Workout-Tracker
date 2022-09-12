@@ -1,18 +1,115 @@
+:root {
+    --body-bg: #EBEBEB;
+    --text-color: #171717;
+    --box-bg: #EBEBEB;
+    --box-shadow: 9px 9px 27px #acacac, -9px -9px 27px #ffffff;
+    --box-shadow-hover: #CFCFCF;
+    --box-border: 3px solid #FFFFFF;
+    --scroll-bar: #F1F1F1;
+    --scroll-bar-thumb: #C1C1C1;
+    --scroll-bar-active: #9B9B9B;
+    --btn-adicionar: #014d22;
+    --btn-adicionar-hover: #01c657;
+}
+
+.darkmode:root {
+    --body-bg: #171717;
+    --text-color: #e6e6e6;
+    --box-bg: #171717;
+    --box-shadow: 9px 9px 27px #090909, -9px -9px 27px #252525;
+    --box-shadow-hover: #272626;
+    --box-border: 2px solid #8D8D8D;
+    --scroll-bar: #272626;
+    --scroll-bar-thumb: #474747;
+    --scroll-bar-active: #302E2E;
+    --btn-adicionar: #003417;
+    --btn-adicionar-hover: #008B3D;
+}
+
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: var(--body-bg);
+    color: var(--text-color);
 }
+
+.my-navBar {
+    background: #002600 !important;
+    border-color: black !important;
+    font-family: sans-serif;
+}
+
+    .my-navBar .navbar-brand {
+        color: #e6e6e6;
+    }
+
+    .my-navBar .nav-link {
+        color: #e6e6e6;
+    }
+
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: var(--scroll-bar);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--scroll-bar-thumb);
+}
+
+    /* Handle on active */
+    ::-webkit-scrollbar-thumb:active {
+        background: var(--scroll-bar-active);
+    }
+
+.btn-adicionar {
+    overflow: hidden;
+    position: relative;
+    background-color: var(--btn-adicionar);
+    color: white;
+}
+
+    .btn-adicionar:hover {
+        background-color: var(--btn-adicionar-hover);
+        color: white;
+    }
+
+    .btn-adicionar:after {
+        background: #fff;
+        content: "";
+        height: 155px;
+        left: -85px;
+        opacity: .4;
+        position: absolute;
+        top: -60px;
+        -webkit-transform: rotate(30deg);
+        transform: rotate(30deg);
+        -webkit-transition: all 850ms cubic-bezier(0.19, 1, 0.22, 1);
+        transition: all 850ms cubic-bezier(0.19, 1, 0.22, 1);
+        width: 70px;
+        z-index: 1;
+    }
+
+    .btn-adicionar:hover:after {
+        left: 130%;
+        -webkit-transition: all 850ms cubic-bezier(0.19, 1, 0.22, 1);
+        transition: all 850ms cubic-bezier(0.19, 1, 0.22, 1);
+    }

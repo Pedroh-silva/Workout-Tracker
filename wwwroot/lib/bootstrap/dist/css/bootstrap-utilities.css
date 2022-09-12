@@ -432,7 +432,7 @@
 }
 
 .border-top {
-  border-top: 1px solid #dee2e6 !important;
+  border-top: 1px solid #dee2e6;
 }
 
 .border-top-0 {
@@ -488,7 +488,7 @@
 }
 
 .border-light {
-  border-color: #f8f9fa !important;
+  border-color: #f8f9fa;
 }
 
 .border-dark {
