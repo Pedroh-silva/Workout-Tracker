@@ -1,0 +1,267 @@
+﻿
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-top: 3%;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.boxTreino {
+    cursor: default;
+    padding: 3%;
+    text-align: center;
+    border-radius: 20px;
+    width: 200px;
+    height: 50px;
+    background: var(--box-bg);
+    box-shadow: var(--box-shadow);
+    border: var(--box-border);
+    transition: all 0.5s;
+    overflow: hidden;
+    margin-bottom: 15%;
+}
+
+    .boxTreino:hover {
+        background: var(--box-shadow-hover);
+        height: 240px;
+    }
+
+    .boxTreino:last-child {
+        margin-bottom: 0;
+    }
+
+    .boxTreino p {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+.exercicios {
+    cursor: pointer;
+    transition: all 0.4s
+}
+
+    .exercicios:hover {
+        font-size: 17px;
+        color: green;
+    }
+
+.fa-pen {
+    cursor: pointer;
+    color: #808080;
+    transition: 0.3s;
+}
+
+    .fa-pen:hover {
+        color: green;
+    }
+
+.details {
+    padding-left: 10px;
+    text-align: left;
+}
+
+.actions a {
+    margin-right: 1%;
+}
+
+    section a:last-child {
+        margin-right: 0px;
+    }
+
+.estatistica {
+    background-color: var(--btn-estatistica)!important;
+}
+.estatistica:hover {
+    background-color: var(--btn-estatistica-hover) !important;
+}
+
+
+#fade {
+    user-select: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+}
+
+.modal {
+    position: initial;
+    color: #e6e6e6;
+    display: none;
+    justify-content: center;
+    padding: 15px;
+    background-color: rgba(23,2,47,0.3);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 10px #555;
+    -webkit-border-radius: 10px;
+    font-weight: bold;
+    z-index: 1;
+    width: 50px;
+    height: 50px;
+}
+
+    .modal #closeModal {
+        margin: -10px;
+        float: right;
+    }
+
+        .modal #closeModal:hover {
+            color: dimgray;
+        }
+
+    .modal .flex-center .editar {
+        margin-right: 30px;
+    }
+
+        .modal .flex-center .editar:last-child {
+            margin-right: 0;
+        }
+
+#conteudo {
+    display: none;
+}
+
+@keyframes scale-up {
+    0% {
+        width: 50px;
+        height: 50px;
+        overflow: hidden;
+    }
+
+    100% {
+        width: 500px;
+        height: 180px;
+        overflow: hidden;
+    }
+}
+
+@keyframes scale-down {
+    0% {
+        width: 500px;
+        height: 180px;
+        overflow: hidden;
+    }
+
+    100% {
+        width: 50px;
+        height: 50px;
+        overflow: hidden;
+    }
+}
+
+@media screen and (max-width:530px) {
+    @keyframes scale-up {
+        0% { width: 50px; height: 50px;overflow: hidden;}
+        100% {width: 300px;height: 180px;overflow: hidden;}
+    }
+
+    @keyframes scale-down {
+        0% {width: 300px;height: 180px;overflow: hidden;}
+        100% {width: 50px;height: 50px;overflow: hidden;}
+    }
+    
+}
+@media screen and (max-width:422px){
+    @keyframes scale-up {
+        0% { width: 50px; height: 50px;overflow: hidden;}
+        100% {width: 300px;height: 150px;overflow: hidden;}
+    }
+
+    @keyframes scale-down {
+        0% {width: 300px;height: 150px;overflow: hidden;}
+        100% {width: 50px;height: 50px;overflow: hidden;}
+    }
+    .actions{
+        display:flex;
+        align-items:center;
+        flex-direction:column;
+    }
+    .actions a{
+        width:50%;
+        margin-bottom:10px;
+    }
+    .boxTreino:hover {
+        background: var(--box-shadow-hover);
+        height: 220px;
+    }
+}
+/* From uiverse.io by @nikk7007 */
+.remover {
+    --color: #af2726 !important;
+}
+
+.editar {
+    --color: #00A97F !important;
+}
+.btn:focus{
+    box-shadow:none;
+}
+.button {
+    --color: white;
+    padding: 0.8em 1.7em;
+    background-color: transparent;
+    border-radius: .3em;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: .5s;
+    font-weight: 700;
+    font-size: 17px;
+    border: 1px solid var(--color);
+    font-family: inherit;
+    text-transform: uppercase;
+    color: var(--color);
+    z-index: 1;
+}
+
+    .button::before, .button::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 50px;
+        transform: translate(-50%, -50%);
+        position: absolute;
+        border-radius: 50%;
+        z-index: -1;
+        background-color: var(--color);
+        transition: 1s ease;
+    }
+
+    .button::before {
+        top: -1em;
+        left: -1em;
+    }
+
+    .button::after {
+        left: calc(100% + 1em);
+        top: calc(100% + 1em);
+    }
+
+    .button:hover::before, .button:hover::after {
+        height: 410px;
+        width: 410px;
+    }
+
+    .button:hover {
+        color: rgb(10, 25, 30);
+    }
+
+    .button:active {
+        filter: brightness(.8);
+    }
+#conteudoExercicio{
+    display:none;
+}
