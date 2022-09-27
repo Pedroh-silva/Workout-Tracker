@@ -12,6 +12,9 @@
     --btn-adicionar-hover: #01c657;
     --btn-estatistica: #350347;
     --btn-estatistica-hover: #9447af;
+    --neumorphism: 26px 26px 52px #999999, -26px -26px 52px #ffffff;
+    --border-boxSelecao: 3px solid #6f6f6f;
+    --buttonSetsReps: #282936;
 }
 
 .darkmode:root {
@@ -28,6 +31,9 @@
     --btn-adicionar-hover: #008B3D;
     --btn-estatistica: #350347;
     --btn-estatistica-hover: #9447af;
+    --neumorphism: 26px 26px 52px #0f0f0f, -26px -26px 52px #1f1f1f;
+    --border-boxSelecao: 3px solid #8D8D8D;
+    --buttonSetsReps: #74779D;
 }
 
 html {
@@ -178,4 +184,12 @@ input:checked + .slider:before {
     color: #e6e6e6;
     margin-right:10px;
     vertical-align:super;
+}
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px var(--body-bg) inset;
+}
+
+/* Cor do texto do autocomplete */
+input:-webkit-autofill {
+    -webkit-text-fill-color: var(--text-color) !important;
 }

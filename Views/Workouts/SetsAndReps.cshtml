@@ -1,0 +1,72 @@
+﻿@model WorkoutTracker.Models.ViewModel.CreateFormViewModel
+
+<link rel="stylesheet" href='~/css/addSetsAndReps.css' />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<h1>Adicionar séries e repetições</h1>
+<hr />
+
+<div id="fade">
+	<div id="modal" class="modal">
+		<button style="float:right;" id="closeModal" class="btn"><i class="fa fa-close"></i></button>
+		<br />
+		<div class="conteudoModal">
+			<h4></h4>
+			<input hidden id="idExercicio" value="" />
+			<div id="InputsEAddBtn">
+				<div class="form__group field">
+					<input id="series" placeholder="Série" class="form__field" type="number" min="1">
+					<label class="form__label" for="name">Série</label>
+				</div>
+				<div class="form__group field">
+					<input id="repetiçoes" placeholder="Repetições" class="form__field" type="number" min="1">
+					<label class="form__label" for="name">Repetições</label>
+				</div>
+				<button class="icon-btn add-btn">
+					<div class="add-icon"></div>
+					<div class="btn-txt">Adicionar</div>
+				</button>
+			</div>
+			<div id="seriesAdicionadas"></div>
+		</div>
+	</div>
+</div>
+
+<section>
+	<a class="btn btn-adicionar estatistica" asp-action="Index">Voltar</a>
+</section>
+<section>
+	<div class="centralizar">
+			<img width="100%" height="auto" src="~/lib/Images/Progress2.svg" />
+		<h4 class="control-label">Defina as séries e repetições de cada exercício</h4>
+		<hr />
+		@using (Html.BeginForm("SetsAndRepsPost", "Workouts", FormMethod.Post, htmlAttributes: new { @id = "SetsAndRepsForm" }))
+		{
+			@Html.AntiForgeryToken()
+			@foreach(var exercicio in Model.Exercises!)
+			{
+				<div>
+				<button type="button" class="exercise_name">
+					<span class="circle" aria-hidden="true">
+						<span class="icon arrow"></span>
+					</span>
+					<span class="button-text" itemid="@exercicio.Id">@exercicio.Name</span>
+				</button>
+				<ul class="listaSets" id="@exercicio.Id"></ul>
+			</div>
+			}
+			<div style="margin-top:3%;">
+				<button type="submit" class="btn btn-adicionar">Avançar</button>
+			</div>
+			@Html.EditorFor(model => model.Workout!.Name, new { htmlAttributes = new { @hidden = true, @value = @Model.Workout!.Name } })
+			@Html.EditorFor(model => model.Workout!.DateTime, new { htmlAttributes = new { @hidden = true, @value = @Model.Workout!.DateTime } })
+			@Html.EditorFor(model => model.Workout!.Duration, new { htmlAttributes = new { @hidden = true, @value = @Model.Workout!.Duration} })
+			<input hidden type="checkbox" name="quantityOfExercises" checked="checked" value="@Model.Exercises.Count">
+		}
+	</div>
+</section>
+@section Scripts{
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<script src="~/js/setsAndReps.js"></script>
+
+}

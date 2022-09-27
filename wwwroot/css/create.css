@@ -1,0 +1,355 @@
+﻿#fade {
+    user-select: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+}
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+.centralizar {
+    padding: 2%;
+    margin-top: 1%;
+    text-align: left;
+    padding-left: 15%;
+    padding-right: 15%;
+    border-radius: 49px;
+    background: var(--body-bg);
+    box-shadow: var(--neumorphism);
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.form-control {
+    margin-bottom: 10px;
+}
+
+.fa-plus span {
+    font-family: var(--bs-font-sans-serif);
+    font-weight: normal;
+    font-size: 16px;
+    transition: all 0.1s;
+}
+
+.fa-plus {
+    padding: 2px;
+    color: var(--text-color);
+    margin-bottom:10px;
+}
+
+    .fa-plus:hover {
+        cursor: pointer;
+        color: green;
+    }
+
+#pop-up-Categoria {
+    display: none;
+    position: absolute;
+    width: fit-content;
+    padding: 5px;
+    box-shadow: 0 0 10px #555;
+    -webkit-border-radius: 10px;
+    z-index: 1;
+    background: var(--body-bg);
+    color: var(--text-color);
+    font-size: 80%;
+}
+
+.input {
+    color: var(--text-color);
+    font-size: 16px;
+    padding: 25px 10px 1px 5px;
+    display: block;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #515151;
+    background: transparent;
+}
+
+    .input:focus {
+        user-select: none;
+        outline: none;
+    }
+
+.inputTitle {
+    font-weight: 500;
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    transition: 0.4s;
+}
+
+.bar {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+    .bar:before, .bar:after {
+        content: '';
+        height: 2px;
+        width: 0;
+        bottom: 0px;
+        position: absolute;
+        background: green;
+        transition: 0.3s ease all;
+        -moz-transition: 0.2s ease all;
+        -webkit-transition: 0.2s ease all;
+    }
+
+    .bar:before {
+        left: 50%;
+    }
+
+    .bar:after {
+        right: 50%;
+    }
+
+.input:focus ~ .bar:before, .input:focus ~ .bar:after {
+    width: 50%;
+}
+
+.input:focus ~ .inputTitle {
+    color: green;
+}
+
+
+.group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.conteudoModal {
+    display: none;
+}
+
+.modal {
+    position: relative;
+    color: #e6e6e6;
+    display: none;
+    justify-content: center;
+    padding: 15px;
+    background-color: rgba(23,2,47,0.3);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 10px #555;
+    -webkit-border-radius: 10px;
+    font-weight: bold;
+    z-index: 1;
+    width: 50px;
+    height: 50px;
+}
+
+@keyframes modalScale-up {
+    0% {
+        width: 20px;
+        height: 20px;
+        overflow: hidden;
+    }
+
+    75% {
+        width: 500px;
+        height: 150px;
+        overflow: hidden;
+    }
+
+    100% {
+        width: 500px;
+        height: fit-content;
+        max-height: 500px;
+        overflow-x:hidden;
+        overflow-y:auto;
+    }
+}
+
+@keyframes modalScale-down {
+    0% {
+        width: 500px;
+        height: 150px;
+        overflow: hidden;
+    }
+
+    100% {
+        width: 20px;
+        height: 20px;
+        overflow: hidden;
+    }
+}
+
+@keyframes ExercicioModalScale-up {
+    0% {
+        width: 20px;
+        height: 20px;
+        overflow: hidden;
+    }
+    75% {
+        width: 400px;
+        height: 150px;
+        overflow: hidden;
+    }
+    100% {
+        width: fit-content;
+        max-width:700px;
+        height: fit-content;
+        max-height: 500px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+}
+
+.boxSelecao {
+    width: 150px;
+    height: 70px;
+    padding: 10px;
+    color: var(--text-color);
+    border-radius: 20px;
+    background-color: var(--body-bg);
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border: var(--border-boxSelecao);
+}
+
+    .boxSelecao:last-child {
+        margin-right: 0;
+        margin-bottom: 0;
+    }
+    .boxSelecao:hover {
+        cursor: pointer;
+        border-color: rgba(73,130,48,0.7);
+    }
+
+.boxExercicio {
+    text-align: center;
+    margin-right: 10px;
+}
+    .boxExercicio p:first-child {
+        margin-bottom: -15px;
+    }
+
+    .boxExercicio p:last-child {
+        margin-top: -15px;
+    }
+    .boxExercicio:last-child{
+        margin-right:0;
+    }
+
+.boxChecked {
+    border:3px solid green;
+}
+.selectedExercise{
+    display:none;
+}
+.corCategoria {
+    width: 100%;
+    height: 5px;
+    border-radius: 20px;
+}
+#categoriaSelecionada{
+    width:fit-content;
+    cursor:pointer;
+}
+#pop-up-remover {
+    display: none;
+    position: absolute;
+    width: fit-content;
+    padding: 5px;
+    -webkit-border-radius: 10px;
+    z-index: 1;
+    color: gray;
+    font-size: 80%;
+}
+.selectedCategory{
+    display:none;
+}
+.modal::-webkit-scrollbar {
+    width: 8px;
+}
+.modal::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: none;
+}
+.modal::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: var(--scroll-bar-thumb);
+}
+.modal::-webkit-scrollbar-thumb:active {
+        background: var(--scroll-bar-active);
+}
+@media screen and (max-width:575px){
+    .centralizar {
+        margin-top: 20px;
+        text-align: left;
+        padding:20px;
+    }
+    .centralizar img{
+        margin-top:20px;
+        
+    }
+    .flex-center {
+        flex-direction:column;
+    }
+    @keyframes modalScale-up {
+        0% {
+            width: 20px;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        75% {
+            width: 200px;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        100% {
+            width: 250px;
+            height: 350px;
+            overflow-y: auto;
+            
+        }
+    }
+    @keyframes ExercicioModalScale-up {
+        0% {
+            width: 20px;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        75% {
+            width: 250px;
+            height: 150px;
+            overflow: hidden;
+        }
+
+        100% {
+            width: 250px;
+            height: 350px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+    }
+    @keyframes modalScale-down {
+        0% {
+            width: 250px;
+            height: 350px;
+            overflow: hidden;
+        }
+
+        100% {
+            width: 20px;
+            height: 20px;
+            overflow: hidden;
+        }
+    }
+   
+}

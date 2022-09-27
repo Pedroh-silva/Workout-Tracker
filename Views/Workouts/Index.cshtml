@@ -1,11 +1,6 @@
 ﻿@model List<WorkoutTracker.Models.Workout>
 <link rel="stylesheet" href='~/css/index.css' />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-@{
-	var contador = 1;
-	var contador2 = 2;
-	//TODO:Retirar exemplos do projeto
-}
 
 <h1>Histórico de Treino</h1>
 <hr />
@@ -33,42 +28,14 @@
 </section>
 
 <section class="flex-center">
-	<div class="flex-column">
-		@if (Model.Count == 0)
-		{
-			<div class="boxTreino">
-				<p style="font-weight:500">Treino Peito</p>
-				<div class="details">
-					<p>Tempo: 00:40</p>
-					<p>Data: 13/09/2022</p>
-					<p class="exercicios" itemid="@contador"><i class='fas fa-angle-double-right'></i> 3 exercícios</p>
-					<ul id="exerciseList_@contador" hidden>
-						<li>Flexão</li>
-						<li>barra</li>
-						<li>Agachamento</li>
-					</ul>
-					<p>Categoria: Puxar </p>
-				</div>
-				<i id="edit" class='fas fa-pen' itemid="@contador"></i>
-			</div>
-			<div class="boxTreino">
-				<p style="font-weight:500">Treino Costas</p>
-				<div class="details">
-					<p>Tempo: 00:40</p>
-					<p>Data: 13/09/2022</p>
-					<p class="exercicios" itemid="@contador2"><i class='fas fa-angle-double-right'></i> 3 exercícios</p>
-					<ul id="exerciseList_@contador2" hidden>
-						<li>barra</li>
-						<li>barra</li>
-						<li>barra</li>
-					</ul>
-					<p>Categoria: Puxar </p>
-				</div>
-				<i id="edit" class='fas fa-pen' itemid="@contador2"></i>
-			</div>
-		}
-		else
-		{
+
+	@if (Model.Count == 0)
+	{
+		<h3 style="margin-top:100px;">Nenhum treino adicionado...</h3>
+	}
+	else
+	{
+		<div class="flex-column">
 			@foreach (var treino in Model)
 			{
 				<div class="boxTreino">
@@ -76,12 +43,17 @@
 					<div class="details">
 
 						<p>Tempo: @treino.Duration.ToString(@"hh\:mm")</p>
-						<p>Data: @treino.DateTime</p>
+						<p>Data: @treino.DateTime.ToString("g")</p>
 						<p class="exercicios" itemid="@treino.Id"><i class='fas fa-angle-double-right'></i> @treino.Exercises.Count() exercícios</p>
 						<ul id="exerciseList_@treino.Id" hidden>
 							@foreach (var exercise in treino.Exercises)
 							{
-								<li>@exercise.Name</li>
+								<li>@exercise.Name -
+									@foreach(var setsReps in exercise.SetsAndReps)
+									{
+										<p>série: @setsReps.Quantity | repetições: @setsReps.Repetitions</p>
+									}
+								</li>
 							}
 						</ul>
 						@foreach (var categoria in treino.Categories)
@@ -92,8 +64,9 @@
 					<i id="edit" class='fas fa-pen' itemid="@treino.Id"></i>
 				</div>
 			}
-		}
-	</div>
+		</div>
+	}
+
 </section>
 
 

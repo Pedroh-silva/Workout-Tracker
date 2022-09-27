@@ -14,20 +14,25 @@ namespace WorkoutTracker.Services
         }
         public async Task<List<Workout>> FindAllAsync()
         {
-            return await _context.Workout!.OrderByDescending(x => x.DateTime).ToListAsync();
+            return await _context.Workout!.Include(x => x.Exercises).ThenInclude(x => x.SetsAndReps).Include(x => x.Categories).OrderByDescending(x => x.DateTime).ToListAsync();
         }
         public async Task<Workout> FindByIdAsync(int id)
         {
             var workout = await _context.Workout!.FirstOrDefaultAsync(x => x.Id == id);
             return workout!;
         }
-        public async Task Insert(Workout workout)
+        public async Task<Workout> FindLastinDb()
+        {
+            var workout = await _context.Workout!.OrderByDescending(x => x.Id).FirstOrDefaultAsync();
+            return workout!;
+        }
+        public async Task InsertAsync(Workout workout)
         {
             _context.Add(workout);
             await _context.SaveChangesAsync();
 
         }
-        public async Task Remove(int id)
+        public async Task RemoveAsync(int id)
         {
             var obj = await _context.Workout!.FindAsync(id);
             var setsAndReps = await _context.SetsAndReps!.Where(x => x.WorkoutId == id).ToListAsync();

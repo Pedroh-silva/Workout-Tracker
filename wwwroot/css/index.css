@@ -17,7 +17,7 @@
     padding: 3%;
     text-align: center;
     border-radius: 20px;
-    width: 200px;
+    width: 220px;
     height: 50px;
     background: var(--box-bg);
     box-shadow: var(--box-shadow);
@@ -85,14 +85,14 @@
 
 #fade {
     user-select: none;
-    position: absolute;
+    position:fixed;
     top: 0;
     left: 0;
     display: none;
     height: 100%;
     align-items: center;
     justify-content: center;
-    z-index: 2;
+    z-index: 1;
     width: 100%;
     background: rgba(0,0,0,0.6);
 }
@@ -133,7 +133,23 @@
 #conteudo {
     display: none;
 }
+.modal::-webkit-scrollbar {
+    width: 8px;
+}
 
+.modal::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: none;
+}
+
+.modal::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: var(--scroll-bar-thumb);
+}
+
+    .modal::-webkit-scrollbar-thumb:active {
+        background: var(--scroll-bar-active);
+    }
 @keyframes scale-up {
     0% {
         width: 50px;
@@ -144,7 +160,7 @@
     100% {
         width: 500px;
         height: 180px;
-        overflow: hidden;
+        overflow: auto;
     }
 }
 

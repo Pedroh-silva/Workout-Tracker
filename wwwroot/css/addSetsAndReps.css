@@ -1,0 +1,458 @@
+﻿
+.centralizar {
+    padding: 2%;
+    margin-top: 1%;
+    text-align: left;
+    padding-left: 15%;
+    padding-right: 15%;
+    border-radius: 49px;
+    background: var(--body-bg);
+    box-shadow: var(--neumorphism);
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+
+.conteudoModal {
+    display: block;
+    padding-left: 20px;
+    margin: 5px;
+}
+
+#fade {
+    user-select: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    height: 100%;
+    align-items: center;
+    justify-content: space-around;
+    z-index: 2;
+    width: 100%;
+    background: rgba(0,0,0,0.6);
+    box-sizing:border-box;
+}
+
+.modal {
+    margin-top: 10px;
+    color: #e6e6e6;
+    display: none;
+    position:initial;
+    justify-content: center;
+    padding: 15px;
+    background-color: rgba(23,2,47,0.3);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 10px #555;
+    -webkit-border-radius: 10px;
+    font-weight: bold;
+    width: 400px;
+    height: 300px;
+   
+}
+
+@keyframes modalScale-up {
+    0% {
+        width: 20px;
+        height: 20px;
+        overflow-y:auto;
+    }
+
+    100% {
+        width: 420px;
+        height: 300px;
+        overflow-y: auto;
+    }
+
+   
+}
+
+@keyframes modalScale-down {
+    0% {
+        width: 420px;
+        height: 300px;
+        overflow: hidden;
+    }
+
+    100% {
+        width: 20px;
+        height: 20px;
+        overflow: hidden;
+    }
+}
+
+/* From uiverse.io by mrhyddenn */
+.form__group {
+    position: relative;
+    padding: 20px 0 0;
+    margin-top: 10px;
+    width: 100px;
+    max-width: 180px;
+}
+.form__group:first-child{
+    margin-right:20px;
+}
+
+.form__field {
+    font-family: inherit;
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #9b9b9b;
+    outline: 0;
+    font-size: 17px;
+    color: #fff;
+    padding: 7px 0;
+    background: transparent;
+    transition: border-color 0.2s;
+}
+
+    .form__field::placeholder {
+        color: transparent;
+    }
+
+    .form__field:placeholder-shown ~ .form__label {
+        font-size: 17px;
+        cursor: text;
+        top: 20px;
+    }
+
+.form__label {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 17px;
+    color: #9b9b9b;
+    pointer-events: none;
+}
+
+.form__field:focus {
+    padding-bottom: 6px;
+    font-weight: 700;
+    border-width: 3px;
+    border-image: linear-gradient(to right, #00491F, #70D85B);
+    border-image-slice: 1;
+}
+
+    .form__field:focus ~ .form__label {
+        position: absolute;
+        top: 0;
+        display: block;
+        transition: 0.2s;
+        font-size: 17px;
+        color: green;
+        font-weight: 700;
+    }
+/*----------------------------------------------*/
+.icon-btn {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #cdcdcd;
+    background: white;
+    border-radius: 25px;
+    overflow: hidden;
+    position: relative;
+    transition: width 0.2s ease-in-out;
+    font-weight: 500;
+    font-family: inherit;
+    margin-left:20px;   
+    margin-top:15px;
+}
+
+.add-btn:hover {
+    width: 120px;
+}
+
+.add-btn::before,
+.add-btn::after {
+    transition: width 0.2s ease-in-out, border-radius 0.2s ease-in-out;
+    content: "";
+    position: absolute;
+    height: 4px;
+    width: 10px;
+    top: calc(50% - 2px);
+    background: seagreen;
+}
+
+.add-btn::after {
+    right: 14px;
+    overflow: hidden;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.add-btn::before {
+    left: 14px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.icon-btn:focus {
+    outline: none;
+}
+
+.btn-txt {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.add-btn:hover::before,
+.add-btn:hover::after {
+    width: 4px;
+    border-radius: 2px;
+}
+
+.add-btn:hover .btn-txt {
+    opacity: 1;
+}
+
+.add-icon::after,
+.add-icon::before {
+    transition: all 0.2s ease-in-out;
+    content: "";
+    position: absolute;
+    height: 20px;
+    width: 2px;
+    top: calc(50% - 10px);
+    background: seagreen;
+    overflow: hidden;
+}
+
+.add-icon::before {
+    left: 22px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+}
+
+.add-icon::after {
+    right: 22px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+}
+
+.add-btn:hover .add-icon::before {
+    left: 15px;
+    height: 4px;
+    top: calc(50% - 2px);
+}
+
+.add-btn:hover .add-icon::after {
+    right: 15px;
+    height: 4px;
+    top: calc(50% - 2px);
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* From uiverse.io */
+button {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    outline: none;
+    border: 0;
+    vertical-align: middle;
+    text-decoration: none;
+    background: transparent;
+    padding: 0;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+    button.exercise_name {
+        width: 310px;
+        height: 50px;
+    }
+
+        button.exercise_name .circle {
+            transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+            position: relative;
+            display: block;
+            margin: 0;
+            width: 3rem;
+            height: 3rem;
+            background: var(--buttonSetsReps);
+            border-radius: 1.625rem;
+        }
+
+            button.exercise_name .circle .icon {
+                transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+                background: #fff;
+            }
+
+                button.exercise_name .circle .icon.arrow {
+                    transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+                    left: 0.625rem;
+                    width: 1.125rem;
+                    height: 0.125rem;
+                    background: none;
+                }
+
+                    button.exercise_name .circle .icon.arrow::before {
+                        position: absolute;
+                        content: "";
+                        top: -0.29rem;
+                        right: 0.0625rem;
+                        width: 0.625rem;
+                        height: 0.625rem;
+                        border-top: 0.125rem solid #fff;
+                        border-right: 0.125rem solid #fff;
+                        transform: rotate(45deg);
+                    }
+
+        button.exercise_name .button-text {
+            transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 0.75rem 0;
+            margin: 0 0 0 70px;
+            color: var(--buttonSetsReps);
+            font-weight: 700;
+            line-height: 1.6;
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+
+    button:hover .circle {
+        width: 100%;
+    }
+
+        button:hover .circle .icon.arrow {
+            background: #fff;
+            transform: translate(1rem, 0);
+        }
+
+    button:hover .button-text {
+        color: #fff;
+    }
+.SetsReps{
+    display:none;
+}
+@keyframes invalid {
+    0% {
+        margin-left: 0;
+        color: #9b9b9b;
+        border-color: #9b9b9b;
+    }
+
+    25% {
+        margin-left: 7px;
+        color: #964a4a;
+        border-color: #964a4a;
+    }
+
+    50% {
+        margin-left: 0;
+        color: #8c1414;
+        border-color: #8c1414;
+    }
+
+    75% {
+        margin-left: 7px;
+        color: #964a4a;
+        border-color: #964a4a;
+    }
+
+    100% {
+        margin-left: 0;
+        color: #9b9b9b;
+        border-color: #9b9b9b;
+    }
+}
+
+.invalid {
+    animation-name: invalid;
+    animation-duration: 1s;
+}
+.fa-close {
+    color: var(--text-color);
+}
+.fa-close:hover{
+    color:gray;
+}
+#InputsEAddBtn{
+    display:flex;
+}
+.modal::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: none;
+}
+
+.modal::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: var(--scroll-bar-thumb);
+}
+
+    .modal::-webkit-scrollbar-thumb:active {
+        background: var(--scroll-bar-active);
+    }
+@media screen and (max-width:425px) {
+    button.exercise_name {
+        width: 270px;
+        height: 50px;
+    }
+    h4{
+        font-size:16px;
+    }
+    .centralizar{
+        padding:20px;
+    }
+    #InputsEAddBtn{
+        flex-wrap:wrap;
+    }
+    
+    .modal{
+        padding:0;
+    }
+    .icon-btn{
+        margin-left:0;
+    }
+    button.exercise_name .button-text {
+        margin-left:50px;
+    }
+        @keyframes modalScale-up {
+            0% {
+                width: 20px;
+                height: 20px;
+                overflow-y: auto;
+            }
+
+            100% {
+                width: 280px;
+                height: 300px;
+                overflow-y: auto;
+            }
+        }
+
+        @keyframes modalScale-down {
+            0% {
+                width: 280px;
+                height: 300px;
+                overflow: hidden;
+            }
+
+            100% {
+                width: 20px;
+                height: 20px;
+                overflow: hidden;
+            }
+        }
+    }
