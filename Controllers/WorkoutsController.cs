@@ -12,11 +12,13 @@ namespace WorkoutTracker.Controllers
         private readonly WorkoutService _workoutService;
         private readonly ExerciseService _exerciseService;
         private readonly CategoryService _categoryService;
-        public WorkoutsController(WorkoutService workoutService,ExerciseService exerciseService, CategoryService categoryService)
+        private readonly SetsAndRepsService _setsAndRepsService;
+        public WorkoutsController(WorkoutService workoutService, ExerciseService exerciseService, CategoryService categoryService, SetsAndRepsService setsAndRepsService)
         {
             _workoutService = workoutService;
             _exerciseService = exerciseService;
             _categoryService = categoryService;
+            _setsAndRepsService = setsAndRepsService;
 
         }
         // GET: WorkoutsController
@@ -29,10 +31,10 @@ namespace WorkoutTracker.Controllers
         // GET: WorkoutsController/Details/5
         public async Task<ActionResult> Details(int? id)
         {
-            if(id != null)
+            if (id != null)
             {
                 var workout = await _workoutService.FindByIdAsync((int)id);
-                if(workout == null)
+                if (workout == null)
                 {
                     return View("Error");
                 }
@@ -46,7 +48,7 @@ namespace WorkoutTracker.Controllers
         {
             var listExercises = await _exerciseService.FindAllAsync();
             var listCategories = await _categoryService.FindAllAsync();
-            CreateFormViewModel viewModel = new CreateFormViewModel { Categories = listCategories,Exercises = listExercises};
+            CreateFormViewModel viewModel = new CreateFormViewModel { Categories = listCategories, Exercises = listExercises };
             return View(viewModel);
         }
 
@@ -57,27 +59,28 @@ namespace WorkoutTracker.Controllers
         {
             try
             {
-                
+
                 var selectedExercisesId = Request.Form["selectedExercise"];
-                
-                if (!string.IsNullOrEmpty(selectedExercisesId))
+                if (isExerciseFormNull(selectedExercisesId))
                 {
-                    HttpContext.Session.SetString("WorkoutExercisesId", selectedExercisesId);
-                    var selectedCategoryId = Request.Form["selectedCategory"];
-                    if (!string.IsNullOrEmpty(selectedCategoryId))
-                    {
-                            HttpContext.Session.SetString("WorkoutCategoryId", selectedCategoryId);
-                    }
-                    return RedirectToAction(nameof(SetsAndReps),workout);
+                    return NoContent();
                 }
-                return NoContent();
+                HttpContext.Session.SetString("WorkoutExercisesId", selectedExercisesId);
+                var selectedCategoryId = Request.Form["selectedCategory"];
+                if (!isCategoryFormNull(selectedCategoryId))
+                {
+                    HttpContext.Session.SetString("WorkoutCategoryId", selectedCategoryId);
+                }
+                return RedirectToAction(nameof(SetsAndReps), workout);
+
+
             }
             catch
             {
-                return View();
+                return NoContent();
             }
         }
-        public async Task<ActionResult> SetsAndReps(Workout workoutData) 
+        public async Task<ActionResult> SetsAndReps(Workout workoutData)
         {
             /* workoutData -> Essa variável possui apenas dados como nome, data e duração
              será adicionado os exercícios e a categoria posteriormente após o envio do forms
@@ -87,19 +90,16 @@ namespace WorkoutTracker.Controllers
             {
                 return RedirectToAction(nameof(Create));
             }
-            CreateFormViewModel createFormViewModel = new CreateFormViewModel();
-
-            createFormViewModel.Workout = workoutData;
-            
             var exercisesId = HttpContext.Session.GetString("WorkoutExercisesId");
             if (exercisesId == null)
             {
                 return RedirectToAction(nameof(Create));
             }
-            string[] exercisesIdSplitted = exercisesId!.Split(",").ToArray();
-            var allExercises = await _exerciseService.FindAllAsync();
-            var listExercises = allExercises.Where(x => exercisesIdSplitted.Select(int.Parse).Contains(x.Id)).ToList();
-           
+            CreateFormViewModel createFormViewModel = new CreateFormViewModel();
+
+            createFormViewModel.Workout = workoutData;
+            
+            var listExercises = await CreateListOfExerciseBySession(exercisesId);
             createFormViewModel.Exercises = listExercises;
 
             HttpContext.Session.Remove("WorkoutExercisesId");
@@ -107,7 +107,7 @@ namespace WorkoutTracker.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SetsAndRepsPost(CreateFormViewModel createFormViewModel)
+        public async Task<ActionResult> SetsAndRepsPost(Workout workout)
         {
             /*
              Form["SetsReps"] -> é recebido "IdDoExercício-QuantidadeDeSéries-QuantidadeDeRepetições"
@@ -116,86 +116,174 @@ namespace WorkoutTracker.Controllers
              adicionado é atualizado
             */
 
-            Workout workoutData = new Workout();
-            workoutData = createFormViewModel.Workout!;
-            
             var listExIdSetsReps = Request.Form["SetsReps"];
             var formExerciseCount = Request.Form["quantityOfExercises"].ToString();
             int quantityOfExercises;
             bool success = int.TryParse(formExerciseCount, out quantityOfExercises);
             if (!success)
-			{
+            {
                 return NoContent();
-			}
+            }
             if (!string.IsNullOrEmpty(listExIdSetsReps))
             {
                 string[] initialSplit = listExIdSetsReps.ToString().Split(",");
-                if(quantityOfExercises > initialSplit.Length)
+                if (quantityOfExercises > initialSplit.Length)
                 {
                     return NoContent();
                 }
-                //Adicionando categoria
-                var categoriesId = HttpContext.Session.GetString("WorkoutCategoryId");
-                string[] categoryIdSplitted = categoriesId!.Split(",").ToArray();
-                var allCategories = await _categoryService.FindAllAsync();
-                var categorySelected = allCategories.Where(x => categoryIdSplitted.Select(int.Parse).Contains(x.Id)).FirstOrDefault();
-                if (categorySelected != null)
-                {
-                    workoutData.Categories.Add(categorySelected);
-                }
-                await _workoutService.InsertAsync(workoutData);
 
-                HttpContext.Session.Remove("WorkoutCategoryId");
+                var categoriesId = HttpContext.Session.GetString("WorkoutCategoryId");
+                if (categoriesId != null)
+                {
+                    bool isEditing = false;
+                    var categorySelected = await AddCategoryToWorkout(isEditing, categoriesId);
+                    if (categorySelected != null)
+                    {
+                        workout.Categories.Add(categorySelected);
+
+                    }
+                }
+                await _workoutService.InsertAsync(workout);
                 var workoutjustAdded = await _workoutService.FindLastinDb();
 
-                ICollection<SetsAndReps> setsAndReps = new List<SetsAndReps>();
+                var setsAndReps = CreateListOfSetsAndReps(initialSplit, workoutjustAdded.Id);
                 
-                for (int i = 0; i < initialSplit.Length; i++)
-                {
-                    string[] finalSplit = initialSplit[i].ToString().Split("-");
-                    var exerciseId = int.Parse(finalSplit[0]);
-                    var quantity = int.Parse(finalSplit[1]);
-                    var repetitions = int.Parse(finalSplit[2]);
-
-                    SetsAndReps obj = new SetsAndReps() { Quantity = quantity, Repetitions = repetitions, WorkoutId = workoutjustAdded.Id, ExerciseId = exerciseId };
-                    setsAndReps.Add(obj);
-                }
-               
                 foreach (var obj in setsAndReps)
                 {
                     var exercise = await _exerciseService.FindByIdAsync(obj.ExerciseId);
                     exercise.SetsAndReps.Add(obj);
                     workoutjustAdded.Exercises.Add(exercise);
                 }
+
                 await _workoutService.UpdateAsync(workoutjustAdded);
                 return RedirectToAction(nameof(Index));
 
             }
-            
+
             return NoContent();
         }
 
         // GET: WorkoutsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var listExercises = await _exerciseService.FindAllAsync();
+            var listCategories = await _categoryService.FindAllAsync();
+            var workout = await _workoutService.FindByIdAsync(id);
+            CreateFormViewModel viewModel = new CreateFormViewModel { Categories = listCategories, Exercises = listExercises, Workout = workout };
+            return View(viewModel);
         }
 
         // POST: WorkoutsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Workout workout)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+
+                var selectedExercisesId = Request.Form["selectedExercise"];
+                if (isExerciseFormNull(selectedExercisesId))
+                {
+                    return NoContent();
+                }
+                HttpContext.Session.SetString("WorkoutExercisesIdEdit", selectedExercisesId);
+                var selectedCategoryId = Request.Form["selectedCategory"];
+                if (!isCategoryFormNull(selectedCategoryId))
+                {
+                    HttpContext.Session.SetString("WorkoutCategoryIdEdit", selectedCategoryId);
+                }
+                return RedirectToAction(nameof(EditSetsAndReps), workout);
+
             }
             catch
             {
-                return View();
+                return NoContent();
             }
         }
+        public async Task<ActionResult> EditSetsAndReps(Workout workout)
+        {
+            if (workout == null)
+            {
+                return NoContent();
+            }
 
+            var exercisesId = HttpContext.Session.GetString("WorkoutExercisesIdEdit");
+            if (exercisesId == null)
+            {
+                return NoContent();
+            }
+            
+            var listExercises = await CreateListOfExerciseBySession(exercisesId);
+            workout.Exercises = listExercises;
+           
+            HttpContext.Session.Remove("WorkoutExercisesIdEdit");
+            return View(workout);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditSetsAndRepsPost(Workout workout)
+        {
+
+            var listExIdSetsReps = Request.Form["SetsReps"];
+            Workout workoutToBeEdited = await _workoutService.FindByIdAsync(workout.Id);
+
+            if (workoutToBeEdited == null)
+            {
+                return BadRequest();
+            }
+
+            var formExerciseCount = Request.Form["quantityOfExercises"].ToString();
+            int quantityOfExercises;
+            bool success = int.TryParse(formExerciseCount, out quantityOfExercises);
+            if (!success)
+            {
+                return NoContent();
+            }
+
+            if (!string.IsNullOrEmpty(listExIdSetsReps))
+            {
+                string[] initialSplit = listExIdSetsReps.ToString().Split(",");
+                if (quantityOfExercises > initialSplit.Length)
+                {
+                    return NoContent();
+                }
+
+                workoutToBeEdited.Exercises.Clear();
+                workoutToBeEdited.Categories.Clear();
+                workoutToBeEdited.Name = workout.Name;
+                workoutToBeEdited.DateTime = workout.DateTime;
+                workoutToBeEdited.Duration = workout.Duration;
+                //Adicionando categoria
+                var categoriesId = HttpContext.Session.GetString("WorkoutCategoryIdEdit");
+                if (categoriesId != null)
+                {
+                    bool isEditing = true;
+                    var categorySelected = await AddCategoryToWorkout(isEditing, categoriesId);
+                    if (categorySelected != null)
+                    {
+                        workoutToBeEdited.Categories.Add(categorySelected);
+                        
+                    }
+                }
+
+                var setsAndReps = CreateListOfSetsAndReps(initialSplit, workoutToBeEdited.Id);
+                
+                await _setsAndRepsService.RemoveAllByWorkoutIdAsync(workoutToBeEdited.Id);
+
+                foreach (var obj in setsAndReps)
+                {
+                    var exercise = await _exerciseService.FindByIdAsync(obj.ExerciseId);
+                    exercise.SetsAndReps.Add(obj);
+                    workoutToBeEdited.Exercises.Add(exercise);
+                }
+                await _workoutService.UpdateAsync(workoutToBeEdited);
+
+                return RedirectToAction(nameof(Index));
+
+            }
+
+            return NoContent();
+        }
         // GET: WorkoutsController/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
@@ -218,7 +306,7 @@ namespace WorkoutTracker.Controllers
         {
             try
             {
-               await _workoutService.RemoveAsync(id);
+                await _workoutService.RemoveAsync(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -226,7 +314,91 @@ namespace WorkoutTracker.Controllers
                 return View();
             }
         }
-        //TODO: Add controllers for statistic and AddByCategory
+        public async Task<ActionResult> AddByCategory()
+        {
+            List<Category> categories = new List<Category>();
+            categories = await _categoryService.FindAllAsync();
+            return View(categories);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddByCategoryPost()
+        {
+            var exercisesId = Request.Form["selectedExercise"];
+            var duration = TimeSpan.Parse(Request.Form["WorkoutDuration"].ToString());
+            var dateTime = DateTime.Parse(Request.Form["workoutDateTime"].ToString());
+            var id = int.Parse(Request.Form["WorkoutId"].ToString());
+            var workoutInDb = await _workoutService.FindByIdAsync(id);
+            Workout workout = new Workout { Name = workoutInDb.Name, DateTime = dateTime, Duration = duration };
 
+            if (!string.IsNullOrEmpty(exercisesId))
+            {
+                HttpContext.Session.SetString("WorkoutExercisesId", exercisesId);
+                var selectedCategoryId = Request.Form["selectedCategory"];
+                if (!string.IsNullOrEmpty(selectedCategoryId))
+                {
+                    HttpContext.Session.SetString("WorkoutCategoryId", selectedCategoryId);
+                }
+
+                return RedirectToAction(nameof(SetsAndReps), workout);
+            }
+            return NoContent();
+        }
+        private bool isExerciseFormNull(string form)
+        {
+            if (string.IsNullOrEmpty(form))
+            {
+                return true;
+            }
+            return false;
+        }
+        private bool isCategoryFormNull(string form)
+        {
+            if (string.IsNullOrEmpty(form))
+            {
+                return true;
+            }
+            return false;
+        }
+        private async Task<Category> AddCategoryToWorkout(bool isEditing, string categoriesId)
+        {
+
+            string[] categoryIdSplitted = categoriesId!.Split(",").ToArray();
+            var allCategories = await _categoryService.FindAllAsync();
+            var categorySelected = allCategories.Where(x => categoryIdSplitted.Select(int.Parse).Contains(x.Id)).FirstOrDefault();
+            if (isEditing)
+            {
+                HttpContext.Session.Remove("WorkoutCategoryIdEdit");
+                return categorySelected!;
+            }
+            else
+            {
+                HttpContext.Session.Remove("WorkoutCategoryId");
+                return categorySelected!;
+            }
+        }
+        private ICollection<SetsAndReps> CreateListOfSetsAndReps(string[] initialSplit, int Workoutid)
+        {
+            ICollection<SetsAndReps> setsAndReps = new List<SetsAndReps>();
+
+            for (int i = 0; i < initialSplit.Length; i++)
+            {
+                string[] finalSplit = initialSplit[i].ToString().Split("-");
+                var exerciseId = int.Parse(finalSplit[0]);
+                var quantity = int.Parse(finalSplit[1]);
+                var repetitions = int.Parse(finalSplit[2]);
+
+                SetsAndReps obj = new SetsAndReps() { Quantity = quantity, Repetitions = repetitions, WorkoutId = Workoutid, ExerciseId = exerciseId };
+                setsAndReps.Add(obj);
+            }
+            return setsAndReps;
+        }
+        private async Task<List<Exercise>> CreateListOfExerciseBySession(string exercisesId)
+        {
+            string[] exercisesIdSplitted = exercisesId!.Split(",").ToArray();
+            var allExercises = await _exerciseService.FindAllAsync();
+            var listExercises = allExercises.Where(x => exercisesIdSplitted.Select(int.Parse).Contains(x.Id)).ToList();
+            return listExercises;
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace WorkoutTracker.Services
         }
         public async Task<List<Exercise>> FindAllAsync()
         {
-            return await _context.Exercise!.Include(x => x.Muscles).OrderByDescending(x => x.Name).ToListAsync();
+            return await _context.Exercise!.Include(x => x.Muscles).Include(x => x.SetsAndReps).OrderByDescending(x => x.Name).ToListAsync();
         }
         public async Task<Exercise> FindByIdAsync(int id)
         {
@@ -27,7 +27,7 @@ namespace WorkoutTracker.Services
             await _context.SaveChangesAsync();
 
         }
-        public async Task Remove(int id)
+        public async Task RemoveAsync(int id)
         {
             var obj = await _context.Exercise!.FindAsync(id);
             _context.Exercise.Remove(obj!);

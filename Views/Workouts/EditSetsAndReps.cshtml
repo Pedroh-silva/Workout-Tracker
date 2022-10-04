@@ -1,0 +1,82 @@
+﻿@model WorkoutTracker.Models.Workout
+@{
+	var date = Model.DateTime.ToString("s");
+}
+<link rel="stylesheet" href='~/css/addSetsAndReps.css' />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<h1>Editar séries e repetições</h1>
+<hr />
+
+<div id="fade">
+	<div id="modal" class="modal">
+		<button style="float:right;" id="closeModal" class="btn"><i class="fa fa-close"></i></button>
+		<br />
+		<div class="conteudoModal">
+			<h4></h4>
+			<input hidden id="idExercicio" value="" />
+			<div id="InputsEAddBtn">
+				<div class="form__group field">
+					<input id="series" placeholder="Série" class="form__field" type="number" min="1">
+					<label class="form__label" for="name">Série</label>
+				</div>
+				<div class="form__group field">
+					<input id="repetiçoes" placeholder="Repetições" class="form__field" type="number" min="1">
+					<label class="form__label" for="name">Repetições</label>
+				</div>
+				<button class="icon-btn add-btn">
+					<div class="add-icon"></div>
+					<div class="btn-txt">Adicionar</div>
+				</button>
+			</div>
+			<div id="seriesAdicionadas"></div>
+		</div>
+	</div>
+</div>
+
+<section>
+	<a class="btn btn-adicionar estatistica" asp-action="Index">Voltar</a>
+</section>
+<section>
+	<div class="centralizar">
+		<img width="100%" height="auto" src="~/lib/Images/Progress2.svg" />
+		<h4 class="control-label">Defina as séries e repetições de cada exercício</h4>
+		<hr />
+		@using (Html.BeginForm("EditSetsAndRepsPost", "Workouts", FormMethod.Post, htmlAttributes: new { @id = "EditSetsAndRepsForm" }))
+		{
+			@Html.AntiForgeryToken()
+			@foreach (var exercise in Model.Exercises!)
+			{
+				<div>
+					<button type="button" class="exercise_name">
+						<span class="circle" aria-hidden="true">
+							<span class="icon arrow"></span>
+						</span>
+						<span class="button-text" itemid="@exercise.Id">@exercise.Name</span>
+					</button>
+					<ul class="listaSets" id="@exercise.Id">
+						@foreach (var setReps in exercise.SetsAndReps.Where(x => x.WorkoutId == Model.Id))
+						{<li class='listaInput'>Série: @setReps.Quantity Repetições: @setReps.Repetitions<input type='checkbox' name='SetsReps' id='SetsReps' class='SetsReps' checked='checked' value='@exercise.Id-@setReps.Quantity-@setReps.Repetitions'> <button style='vertical-align:baseline;' id='excluir' class='remove fa fa-close'></button></li>}
+					</ul>
+				</div>
+			}
+			<div style="margin-top:3%;">
+				<button type="submit" class="btn btn-adicionar">Avançar</button>
+			</div>
+			<div id="DataOfWorkout">
+				@Html.EditorFor(model => model.Name, new { htmlAttributes = new { @hidden = true, @value = Model.Name } })
+				<input id="dataFormatada" type="text" hidden value="@date" />
+				@Html.EditorFor(model => model.Duration, new { htmlAttributes = new { @hidden = true, @value = Model.Duration}})
+				@Html.EditorFor(model => model.Id, new { htmlAttributes = new { @hidden = true, @value = Model.Id} })
+				<input hidden type="checkbox" name="quantityOfExercises" checked="checked" value="@Model.Exercises.Count">
+			</div>
+
+		}
+	</div>
+</section>
+@section Scripts{
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<script src="~/js/editSetsAndReps.js"></script>
+<script src="~/js/setsAndReps.js"></script>
+
+}

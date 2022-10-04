@@ -1,1 +1,142 @@
-﻿
+﻿@model WorkoutTracker.Models.ViewModel.CreateFormViewModel
+
+<link rel="stylesheet" href='~/css/create.css' />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<h1>Editar Treino</h1>
+<hr />
+
+<div id="fade">
+	<div id="modal" class="modal">
+		<button id="closeModal" class="btn"><i class="fa fa-close"></i></button>
+		<div id="conteudoCategoria" class="conteudoModal">
+			<h3>Selecione a categoria</h3>
+			<hr />
+			<div class="flex-center flex-wrap">
+				@if (Model.Categories!.Count == 0)
+				{
+					<h5>Nenhuma categoria encontrada....</h5>
+				}
+				else
+				{
+					@foreach (var categories in Model.Categories!)
+					{
+						<div class="boxSelecao categoria">
+							<p>@categories.Name</p>
+							<input class="codigoCor" hidden itemid="@categories.Id" value="@categories.Color" />
+							<div class="corCategoria" id="corCategoria_@categories.Id"></div>
+						</div>
+					}
+				}
+			</div>
+		</div>
+		<div id="conteudoExercicio" class="conteudoModal">
+			<div>
+				<h3>Selecione o(s) exercício(s)</h3>
+				<hr />
+				<div class="flex-center flex-wrap">
+					@if (Model.Exercises!.Count == 0)
+					{
+						<h5>Nenhum exercício encontrado...</h5>
+					}
+					else
+					{
+						@foreach (var exercises in Model.Exercises!)
+						{
+							<div class="boxSelecao boxExercicio">
+								<p>@exercises.Name</p>
+								<hr />
+								<input id="idExercicio" hidden itemid="@exercises.Id" type="checkbox" value="" />
+								@foreach (var muscles in exercises.Muscles)
+								{
+									<p>@muscles.Name</p>
+								}
+							</div>
+						}
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<section>
+	<a class="btn btn-adicionar estatistica" asp-action="Index">Voltar</a>
+</section>
+<section>
+	<div class="centralizar">
+		<img height='100%' width='100%' src="~/lib/Images/Progress.svg" />
+		@using (Html.BeginForm("Edit", "Workouts", FormMethod.Post, htmlAttributes: new { @id = "WorkoutForm" }))
+		{
+			@Html.AntiForgeryToken()
+			<div>
+				<div class="group">
+					@Html.EditorFor(model => model.Workout!.Name, new { htmlAttributes = new { @class = "input", @value = Model.Workout!.Name } })
+					<span class="bar"></span>
+					@Html.LabelFor(model => model.Workout!.Name, htmlAttributes: new { @class = "inputTitle" })
+					<span asp-validation-for="Workout!.Name" class="text-danger"></span>
+				</div>
+				<div class="group">
+					@Html.EditorFor(model => model.Workout!.DateTime, new { htmlAttributes = new { @class = "input" , @value = Model.Workout!.DateTime, @id = "dateTime"} })
+					<span class="bar"></span>
+					@Html.LabelFor(model => model.Workout!.DateTime, htmlAttributes: new { @class = "inputTitle" })
+					<span asp-validation-for="Workout!.DateTime" class="text-danger"></span>
+				</div>
+				<div>
+					<div class="group">
+						@Html.EditorFor(model => model.Workout!.Duration, new { htmlAttributes = new { @class = "input" , @value = Model.Workout!.Duration, @id = "duration"} })
+						<span class="bar"></span>
+						@Html.LabelFor(model => model.Workout!.Duration, htmlAttributes: new { @class = "inputTitle" })
+						<span class="text-danger" id="validacaoTimer"></span>
+					</div>
+				</div>
+				<div style="margin-top:1%">
+					<button id="btnModalCategoria" class="btn fa fa-plus" style="font-size:24px" type="button">
+						<span id="gatilhoPopUp">Categorias</span>
+					</button>
+					@if(Model.Workout.Categories.Count != 0)
+					{
+						@foreach(var category in Model.Workout.Categories)
+						{
+							<p id="categoriaSelecionada"><i style='color:@category.Color;font-weight:bold' class='fa fa-angle-right'></i>@category.Name<input type='checkbox' name='selectedCategory' id='selectedCategory' class='selectedCategory' checked='checked' value='@category.Id'></p>
+						}
+					}
+					else
+					{
+						<p id="categoriaSelecionada"><i style="font-weight:bold" class="fa fa-angle-right"></i> Nenhuma categoria selecionada...</p>
+					}
+					<div id="pop-up-remover">
+						<p>Clique para remover a categoria</p>
+					</div>
+				</div>
+				<div id="pop-up-Categoria">
+					<p>Adicione uma categoria para facilitar a criação dos seus treinos.</p>
+				</div>
+				<div>
+					<button id="btnModalExercicio" class="btn fa fa-plus" style="font-size:24px" type="button">
+						<span id="InfoExercicios">Exercícios</span>
+					</button>
+					<ul id="ListaExercicios">
+						@foreach(var exercise in Model.Workout.Exercises)
+						{
+							<li>@exercise.Name<input type='checkbox' name='selectedExercise' id='selectedExercise' class='selectedExercise' checked='checked' value='@exercise.Id'></li>
+						}
+					</ul>
+					<span id="ValidacaoExercicios" class="text-danger"></span>
+				</div>
+			</div>
+			<div style="margin-top:3%;">
+				<button type="submit" class="btn btn-adicionar">Avançar</button>
+				<input hidden asp-for="Workout.Id" value="@Model.Workout.Id">
+			</div>
+		}
+	</div>
+</section>
+@section Scripts{
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<script src="@Url.Content("~/js/create.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/js/edit.js")" type="text/javascript"></script>
+@{
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

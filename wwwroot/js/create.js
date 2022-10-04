@@ -147,7 +147,7 @@
                 if (checked.val() == 'checked') {
                     var name = $(this).children().eq(0).text();
                     var id = $(this).children().eq(2).attr('itemid');
-                    $('#ListaExercicios').append("<li>" + name + "<input type='checkbox' name='selectedExercise' id='selectedExercise' class='selectedExercise' checked='checked' value='" + id + "'>")
+                    $('#ListaExercicios').append("<li>" + name + "<input type='checkbox' name='selectedExercise' id='selectedExercise' class='selectedExercise' checked='checked' value='" + id + "'></li>")
                 }
             });
             $('#ListaExercicios').show(200);

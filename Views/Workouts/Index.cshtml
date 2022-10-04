@@ -49,7 +49,7 @@
 							@foreach (var exercise in treino.Exercises)
 							{
 								<li>@exercise.Name -
-									@foreach(var setsReps in exercise.SetsAndReps)
+									@foreach(var setsReps in exercise.SetsAndReps.Where(x => x.WorkoutId == treino.Id))
 									{
 										<p>série: @setsReps.Quantity | repetições: @setsReps.Repetitions</p>
 									}

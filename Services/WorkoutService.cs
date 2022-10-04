@@ -18,7 +18,7 @@ namespace WorkoutTracker.Services
         }
         public async Task<Workout> FindByIdAsync(int id)
         {
-            var workout = await _context.Workout!.FirstOrDefaultAsync(x => x.Id == id);
+            var workout = await _context.Workout!.Include(x=>x.Exercises).ThenInclude(x => x.SetsAndReps).Include(x=>x.Categories).FirstOrDefaultAsync(x => x.Id == id);
             return workout!;
         }
         public async Task<Workout> FindLastinDb()
@@ -28,14 +28,16 @@ namespace WorkoutTracker.Services
         }
         public async Task InsertAsync(Workout workout)
         {
+            
             _context.Add(workout);
             await _context.SaveChangesAsync();
+            
 
         }
-        public async Task RemoveAsync(int id)
+        public async Task RemoveAsync(int workoutId)
         {
-            var obj = await _context.Workout!.FindAsync(id);
-            var setsAndReps = await _context.SetsAndReps!.Where(x => x.WorkoutId == id).ToListAsync();
+            var obj = await _context.Workout!.FindAsync(workoutId);
+            var setsAndReps = await _context.SetsAndReps!.Where(x => x.WorkoutId == workoutId).ToListAsync();
             _context.SetsAndReps!.RemoveRange(setsAndReps);
             _context.Workout.Remove(obj!);
             await _context.SaveChangesAsync();
@@ -43,7 +45,7 @@ namespace WorkoutTracker.Services
         }
         public async Task UpdateAsync(Workout obj)
         {
-
+            
             bool hasAny = await _context.Workout!.AnyAsync(x => x.Id == obj.Id);
             if (!hasAny)
             {

@@ -11,6 +11,7 @@ builder.Services.AddDbContext<WorkoutTrackerDbContext>(options => options.UseSql
 builder.Services.AddScoped<WorkoutService>();
 builder.Services.AddScoped<ExerciseService>();
 builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<SetsAndRepsService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

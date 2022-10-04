@@ -1,10 +1,10 @@
 :root {
-    --body-bg: #EBEBEB;
+    --body-bg: #E1DEDE;
     --text-color: #171717;
     --box-bg: #EBEBEB;
-    --box-shadow: 9px 9px 27px #acacac, -9px -9px 27px #ffffff;
+    --box-shadow: 9px 9px 27px #bfbdbd, -9px -9px 27px #ffffff;
     --box-shadow-hover: #CFCFCF;
-    --box-border: 3px solid #FFFFFF;
+    --box-border: 3px solid #ffffff;
     --scroll-bar: #F1F1F1;
     --scroll-bar-thumb: #C1C1C1;
     --scroll-bar-active: #9B9B9B;
@@ -12,7 +12,7 @@
     --btn-adicionar-hover: #01c657;
     --btn-estatistica: #350347;
     --btn-estatistica-hover: #9447af;
-    --neumorphism: 26px 26px 52px #999999, -26px -26px 52px #ffffff;
+    --neumorphism: 26px 26px 52px #bfbdbd, -26px -26px 52px #ffffff;
     --border-boxSelecao: 3px solid #6f6f6f;
     --buttonSetsReps: #282936;
 }
