@@ -1,5 +1,23 @@
 ﻿@model WorkoutTracker.Models.Workout
-<form asp-action="Delete">
+<link rel="stylesheet" href='~/css/WorkoutDelete.css' />
+<link rel="stylesheet" href='~/css/index.css' />
+<h1>Gostaria de remover este treino?</h1>
+<hr />
+<div>
+	<div class="inputColumn">
+		<input disabled placeholder="@Model.Name" />
+		<input disabled placeholder="@((Model.DateTime).ToString("g"))" />
+		<input disabled placeholder="@((Model.Duration).ToString(@"hh\:mm"))" />
+		<ul>
+			@foreach (var item in Model.Exercises)
+			{
+				<li>@item.Name</li>
+			}
+		</ul>
+	</div>
+	<form asp-action="Delete">
 		<input type="hidden" asp-for="Id" />
-		<input type="submit" value="Deletar" class="btn btn-danger" />
+		<a class="btn btn-Voltar" asp-action="Index">Voltar</a>
+		<input type="submit" value="Remover" class="btn btn-Remover" />
 	</form>
+</div>

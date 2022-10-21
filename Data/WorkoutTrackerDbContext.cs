@@ -9,6 +9,7 @@ namespace WorkoutTracker.Data
         public DbSet<Exercise>? Exercise { get; set; }
         public DbSet<Category>? Category { get; set; }
         public DbSet<SetsAndReps>? SetsAndReps { get; set; }
+        public DbSet<Muscle>? Muscle { get; set; }
         public WorkoutTrackerDbContext(DbContextOptions<WorkoutTrackerDbContext> options) : base(options)
         {
         }

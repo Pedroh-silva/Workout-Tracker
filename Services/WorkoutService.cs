@@ -21,9 +21,9 @@ namespace WorkoutTracker.Services
             var workout = await _context.Workout!.Include(x=>x.Exercises).ThenInclude(x => x.SetsAndReps).Include(x=>x.Categories).FirstOrDefaultAsync(x => x.Id == id);
             return workout!;
         }
-        public async Task<Workout> FindLastinDb()
+        public async Task<Workout> FindLastinDbAsync()
         {
-            var workout = await _context.Workout!.OrderByDescending(x => x.Id).FirstOrDefaultAsync();
+            var workout = await _context.Workout!.Include(x=>x.Exercises).OrderByDescending(x => x.Id).FirstOrDefaultAsync();
             return workout!;
         }
         public async Task InsertAsync(Workout workout)

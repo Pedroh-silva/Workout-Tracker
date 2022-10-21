@@ -1,0 +1,17 @@
+﻿.inputColumn{
+    display:flex;
+    flex-direction:column;
+}
+.inputColumn input{
+    width:500px;
+    margin-bottom:20px;
+    height:40px;
+}
+.row{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+    .row a {
+        width: 30px;
+    }

@@ -1,4 +1,4 @@
-﻿@model List<WorkoutTracker.Models.Category>
+﻿@model WorkoutTracker.Models.ViewModel.AddByCategoryFormViewModel
 @{
 
 }
@@ -22,7 +22,7 @@
 			<div id="conteudoTreinoSelecionado">
 				<h3>Treino Selecionado</h3>
 				<hr />
-				@using (Html.BeginForm("AddByCategoryPost", "Workouts", FormMethod.Post, htmlAttributes: new { @id = "WorkoutForm" }))
+				@using (Html.BeginForm("AddByCategoryPost", "Workouts", FormMethod.Post, htmlAttributes: new { @id = "WorkoutAddedByCategoryForm" }))
 				{
 					@Html.AntiForgeryToken()
 					<div class="group">
@@ -31,15 +31,16 @@
 						<label class="inputTitle"></label>
 					</div>
 					<div class="group">
-						<input id="dateTime" name="workoutDateTime" class="input" type="datetime-local">
+						@Html.EditorFor(model => model.Workout.DateTime, new { htmlAttributes = new { @class = "input", @id = "dateTime", @type = "datetime-local" } })
 						<span class="bar"></span>
 						<label class="inputTitle"></label>
+						<span asp-validation-for="Workout.DateTime" class="text-danger"></span>
 					</div>
 					<div class="group">
-						<input id="duration" name="WorkoutDuration" class="input" type="time">
+						@Html.EditorFor(model => model.Workout.Duration, new { htmlAttributes = new { @class = "input", @id = "duration", @type = "time" } })
 						<span class="bar"></span>
 						<label class="inputTitle"></label>
-						<span id="formDuration" class="text-danger"></span>
+						<span id="ValidationformDuration" class="text-danger"></span>
 					</div>
 					<ul id="exerciciosTreinoSelecionado"></ul>
 					<div style="margin-top:3%;">
@@ -53,16 +54,16 @@
 	</div>
 </section>
 <section>
-	<a class="btn btn-adicionar estatistica" asp-action="Index">Voltar</a>
+	<a class="btn btn-Voltar" asp-action="Index">Voltar</a>
 </section>
 <section class="flex-center">
-	@if (Model.Count == 0)
+	@if (Model.Categories!.Count == 0)
 	{
 		<h3 style="margin-top:100px;">Nenhuma categoria adicionada...</h3>
 	}
 	else
 	{
-		@foreach (var categories in Model)
+		@foreach (var categories in Model.Categories)
 		{
 			<div class="boxCategoria">
 				<p>@categories.Name</p>
@@ -104,4 +105,7 @@
 @section Scripts{
 
 <script src="@Url.Content("~/js/AddByCategories.js")" type="text/javascript"></script>
+@{
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 }

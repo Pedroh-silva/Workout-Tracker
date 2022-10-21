@@ -1,0 +1,112 @@
+﻿.card {
+    margin-top: 20px;
+    width: 300px;
+    height: 150px;
+    border:none;
+    background:none;
+    color: white;
+    gap:10px;
+    display: flex;
+    flex-direction:row;
+
+    
+}
+.flex-row{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+}
+.item {
+    cursor: default;
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-left: 5px;
+}
+
+    .item:hover {
+        transform: scale(0.95);
+        transition: all 0.3s;
+    }
+.item--1 {
+    background: #350347;
+}
+.item--2 {
+    background: var(--btn-adicionar);
+    cursor:pointer;
+    color:white;
+}
+    .item--2:hover {
+        background: #01c657;
+        color:white;
+    }
+.text {
+    font-size: 16px;
+    font-family: inherit;
+    font-weight: 600;
+}
+.text--1 {
+    color: white;
+}
+.quantity {
+    font-size: 25px;
+    font-weight: 600;
+}
+#lista {
+    margin-top:20px;
+    width: 500px;
+    height: 200px;
+    border-radius: 10px;
+    background: var(--box-bg);
+    box-shadow: var(--neumorphism);
+    padding: 20px 0 20px 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: var(--box-border);
+    text-align: center;
+}
+#lista select{
+    margin-bottom:20px;
+}
+#lista div{
+    text-align:left;
+    padding-left:10px;
+    font-size:18px;
+}
+
+    #lista::-webkit-scrollbar {
+        width: 8px;
+        
+    }
+
+    #lista::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background: none;
+    }
+
+    #lista::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: var(--scroll-bar-thumb);
+    }
+
+        #lista::-webkit-scrollbar-thumb:active {
+            background: var(--scroll-bar-active);
+        }
+    #lista div:nth-child(odd) {
+        background: var(--listColor);
+    }
+.custom-select {
+    background: var(--bg-body);
+    color: var(--text-color);
+    border-radius: 5px;
+    border: none;
+}
+option {
+    color: #171717;
+    background-color: var(--bg-body);
+}

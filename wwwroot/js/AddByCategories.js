@@ -51,7 +51,15 @@
             fecharModalTreinoSelecionado();
         }
     });
-    
+    //validação
+    $("#WorkoutAddedByCategoryForm").submit(function (e) {
+        var duration = $("#duration").val();
+        $("#ValidationformDuration").text("");
+        if(duration == "00:00" || duration == "") {
+            $("#ValidationformDuration").text("A duração do treino não pode ser 00:00");
+            e.preventDefault();
+        }
+    });
     function animacaoAbrir() {
         fade.css('display', 'flex');
         modal.css('display', 'block');
@@ -83,6 +91,8 @@
         }, 310);
     }
     function fecharModal() {
+        $("#ValidationformDuration").text("");
+        $("#dateTime-error").text("");
         var isTreinoSelecionado = treinoSelecionadoModal.css('display') == 'block';
         if (isTreinoSelecionado) {
             fecharModalTreinoSelecionado();

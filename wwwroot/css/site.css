@@ -1,8 +1,8 @@
 :root {
-    --body-bg: #E1DEDE;
+    --body-bg: #f5f5f5;
     --text-color: #171717;
-    --box-bg: #EBEBEB;
-    --box-shadow: 9px 9px 27px #bfbdbd, -9px -9px 27px #ffffff;
+    --box-bg: #f5f5f5;
+    --box-shadow: 9px 9px 27px #d0d0d0, -9px -9px 27px #ffffff;
     --box-shadow-hover: #CFCFCF;
     --box-border: 3px solid #ffffff;
     --scroll-bar: #F1F1F1;
@@ -12,9 +12,11 @@
     --btn-adicionar-hover: #01c657;
     --btn-estatistica: #350347;
     --btn-estatistica-hover: #9447af;
-    --neumorphism: 26px 26px 52px #bfbdbd, -26px -26px 52px #ffffff;
+    --neumorphism: 26px 26px 52px #d0d0d0, -26px -26px 52px #ffffff;
     --border-boxSelecao: 3px solid #6f6f6f;
     --buttonSetsReps: #282936;
+    --listColor: rgba(192,192,192,0.2);
+    --btn-voltar: #5f5f5f;
 }
 
 .darkmode:root {
@@ -34,6 +36,8 @@
     --neumorphism: 26px 26px 52px #0f0f0f, -26px -26px 52px #1f1f1f;
     --border-boxSelecao: 3px solid #8D8D8D;
     --buttonSetsReps: #74779D;
+    --listColor: rgba(192,192,192,0.1);
+    --btn-voltar: #5f5f5f;
 }
 
 html {
@@ -123,6 +127,61 @@ body {
         -webkit-transition: all 850ms cubic-bezier(0.19, 1, 0.22, 1);
         transition: all 850ms cubic-bezier(0.19, 1, 0.22, 1);
     }
+
+.btn-Voltar {
+    background-color: var(--btn-voltar);
+    color: white;
+}
+
+    .btn-Voltar:hover {
+        background-color:#aeaeae;
+        color:white;
+    }
+.btn-Remover {
+    background-color: #af2726;
+    color: white;
+    font-weight: 700;
+    font-size: 17px;
+}
+
+    .btn-Remover:hover {
+        background-color: #681211;
+        color: white;
+    }
+
+.btn-adicionar-Musculo {
+    overflow: hidden;
+    position: relative;
+    background-color: #6fa36c;
+    color: white;
+}
+
+    .btn-adicionar-Musculo:hover {
+        background-color: var(--btn-adicionar-hover);
+        color: white;
+    }
+
+    .btn-adicionar-Musculo:after {
+        background: #fff;
+        content: "";
+        height: 155px;
+        left: -85px;
+        opacity: .4;
+        position: absolute;
+        top: -60px;
+        -webkit-transform: rotate(30deg);
+        transform: rotate(30deg);
+        -webkit-transition: all 850ms cubic-bezier(0.19, 1, 0.22, 1);
+        transition: all 850ms cubic-bezier(0.19, 1, 0.22, 1);
+        width: 70px;
+        z-index: 1;
+    }
+
+    .btn-adicionar-Musculo:hover:after {
+        left: 130%;
+        -webkit-transition: all 850ms cubic-bezier(0.19, 1, 0.22, 1);
+        transition: all 850ms cubic-bezier(0.19, 1, 0.22, 1);
+    }
 /* From uiverse.io by @TimTrayler */
 .switch {
     --secondary-container: #3a4b39;
@@ -180,11 +239,13 @@ input:focus + .slider {
 input:checked + .slider:before {
     transform: translateX(19px);
 }
+
 .lightDarkMode {
     color: #e6e6e6;
-    margin-right:10px;
-    vertical-align:super;
+    margin-right: 10px;
+    vertical-align: super;
 }
+
 input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px var(--body-bg) inset;
 }

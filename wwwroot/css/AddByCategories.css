@@ -10,7 +10,7 @@
     border: var(--box-border);
     transition: all 0.5s;
     overflow: hidden;
-    margin: 0 20px 20px 0;
+    margin: 30px 20px 20px 0;
 }
 .boxChecked {
     border: 3px solid green;
@@ -20,7 +20,7 @@
     }
 
     .boxCategoria:last-child {
-        margin: 0;
+        margin: 30px 0 20px 0;
     }
 
     .boxCategoria p {
@@ -293,8 +293,9 @@ li{
     }
 }
 @media screen and (max-width:760px) {
-    #fade{
-        flex-direction:column;
+
+    #fade {
+        flex-direction: column;
     }
     
     .modal:last-child {
@@ -359,9 +360,14 @@ li{
         }
     }
 }
-@media screen and (max-width:360px) {
+@media screen and (max-width:480px) {
+    .boxCategoria{
+       margin: 30px 0 20px 0;
+    }
     section.flex-center{
         margin-top:30px;
+        flex-direction:column;
+        align-content:center;
     }
     @keyframes scale-up {
         0% {
