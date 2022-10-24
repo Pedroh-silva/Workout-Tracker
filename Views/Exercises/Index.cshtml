@@ -5,9 +5,9 @@
 <h1>Seus exercícios</h1>
 <hr />
 <section>
-	<a class="btn btn-adicionar estatistica" asp-action="Index" asp-controller="Workouts">Ir para Treinos</a>
+	<a class="btn btn-Voltar" asp-action="Index" asp-controller="Workouts">Ir para Treinos</a>
 </section>
-<section class="flex-row">
+<section class="flex-rowAndColumn">
 	<div id="info">
 		<div class="card">
 			<a asp-action="Create" class="btn item item--2">
@@ -27,7 +27,7 @@
 			<h5>Lista</h5>
 			<select class="custom-select" id="filtro">
 				<option id="0">Filtar por músculo</option>
-				@foreach(var muscles in Model.Muscles!)
+				@foreach (var muscles in Model.Muscles!)
 				{
 					<option>@muscles.Name</option>
 				}
@@ -39,10 +39,14 @@
 					@foreach (var muscle in exercise.Muscles)
 					{
 						<span class="muscleName">@muscle.Name</span>
+						<section id="editDelete">
+							<a asp-action="Edit" asp-route-id="@exercise.Id"><i class="fa fa-pencil-square-o"></i></a>
+							<a asp-action="Delete" asp-route-id="@exercise.Id"><i class="fa fa-trash"></i></a>
+						</section>
 					}
 				</div>
 			}
-			
+
 		</div>
 	</div>
 </section>

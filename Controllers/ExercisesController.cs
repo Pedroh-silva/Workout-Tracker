@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WorkoutTracker.Models;
 using WorkoutTracker.Models.ViewModel;
 using WorkoutTracker.Services;
+using WorkoutTracker.Services.Exceptions;
 
 namespace WorkoutTracker.Controllers
 {
@@ -53,74 +55,156 @@ namespace WorkoutTracker.Controllers
             try
             {
                 var muscleIdAndName = Request.Form["createOrSelectedMuscle"];
-                if(!string.IsNullOrEmpty(exercise.Name) && !string.IsNullOrEmpty(muscleIdAndName))
+                if (!string.IsNullOrEmpty(exercise.Name) && !string.IsNullOrEmpty(muscleIdAndName))
                 {
                     string[] splittedData = muscleIdAndName.ToString().Split("-");
                     int muscleId;
-                    bool hasAnyorIsCreating = int.TryParse(splittedData[0], out muscleId);
+                    bool hasAnyIdOrIsCreating = int.TryParse(splittedData[0], out muscleId);
 
-                    if (hasAnyorIsCreating)
+                    if (hasAnyIdOrIsCreating)
                     {
                         var muscle = await _muscleService.FindByIdAsync(muscleId);
                         exercise.Muscles.Add(muscle);
                     }
                     else
                     {
-                        Muscle muscle = new Muscle { Name = splittedData[1]};
-                        await _muscleService.Insert(muscle);
+                        Muscle muscle = new Muscle { Name = splittedData[1] };
+                        await _muscleService.InsertAsync(muscle);
                         exercise.Muscles.Add(muscle);
                     }
-                    await _exerciseService.Insert(exercise);
+                    await _exerciseService.InsertAsync(exercise);
                     return RedirectToAction(nameof(Index));
                 }
                 return NoContent();
             }
-            catch
+            catch(Exception ex)
             {
-                return View();
+                return RedirectToAction(nameof(Error), new {message = ex.Message, solution = ""});
             }
         }
 
         // GET: ExercisesController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            if (id != 0)
+            {
+                var exercise = await _exerciseService.FindByIdAsync(id);
+                if (exercise != null)
+                {
+                    CreateExerciseFormViewModel createExerciseFormViewModel = new CreateExerciseFormViewModel();
+                    createExerciseFormViewModel.Exercise = exercise;
+                    createExerciseFormViewModel.Muscles = await _muscleService.FindAllAsync();
+                    return View(createExerciseFormViewModel);
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: ExercisesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(Exercise exercise)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var muscleIdAndName = Request.Form["createOrSelectedMuscle"];
+                if (!string.IsNullOrEmpty(exercise.Name) && !string.IsNullOrEmpty(muscleIdAndName) && exercise.Id != 0)
+                {
+                    var exerciseInDb = await _exerciseService.FindByIdAsync(exercise.Id);
+                    string[] splittedData = muscleIdAndName.ToString().Split("-");
+                    int muscleId;
+                    bool isSuccess = int.TryParse(splittedData[0], out muscleId);
+                    if (exerciseInDb.Name == exercise.Name)
+                    {
+                        if (hasSameMuscle(exerciseInDb, muscleId))
+                        {
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+                    //Nome alterado
+                    exerciseInDb.Name = exercise.Name;
+                    if (!hasSameMuscle(exerciseInDb, muscleId))
+                    {
+                        if (!isSuccess)
+                        {
+                            return NoContent();
+                        }
+                        exerciseInDb.Muscles.Clear();
+                        var muscle = await _muscleService.FindByIdAsync(muscleId);
+                        exerciseInDb.Muscles.Add(muscle);
+                    }
+                    await _exerciseService.UpdateAsync(exerciseInDb);
+                    return RedirectToAction(nameof(Index));
+                }
+                return NoContent();
             }
-            catch
+            catch(DbConcurrencyException ex)
             {
-                return View();
+                return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "Ops! um bug encontrado, entre em contato com o desenvolvedor" });
             }
         }
 
         // GET: ExercisesController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+
+            if (id != 0)
+            {
+                var exercise = await _exerciseService.FindByIdAsync(id);
+                if (exercise != null)
+                {
+                    return View(exercise);
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: ExercisesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [ActionName("Delete")]
+        public async Task<ActionResult> DeletePost(int id)
         {
             try
             {
+                var exercise = await _exerciseService.FindByIdAsync(id);
+
+                if (_exerciseService.ErrorReferentialIntegrity(exercise))
+                {
+                    throw new Referential_IntegrityException("You cannot remove this exercise, it is registered in a Workout.");
+                }
+
+                await _muscleService.RemoveMuscleByExerciseIdAsync(id);
+                await _exerciseService.RemoveAsync(id);
                 return RedirectToAction(nameof(Index));
+
+
             }
-            catch
+            catch (Referential_IntegrityException ex)
             {
-                return View();
+                return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "You will need to remove the workout(s) first" });
             }
+        }
+        public ActionResult Error(string message, string solution)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                Solution = solution,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+            return View(viewModel);
+        }
+        protected bool hasSameMuscle(Exercise exerciseInDataBase, int MuscleIdByForms)
+        {
+            var sameMuscle = exerciseInDataBase.Muscles.Where(x => x.Id == MuscleIdByForms);
+            if (sameMuscle.Any())
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

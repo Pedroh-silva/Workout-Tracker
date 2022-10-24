@@ -1,5 +1,63 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model WorkoutTracker.Models.ViewModel.CreateExerciseFormViewModel
+
+<link rel="stylesheet" href='~/css/create.css' />
+<link rel="stylesheet" href='~/css/exerciseCreate.css' />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<h1>Editar exercício</h1>
+<section>
+	<a asp-action="Index" class="btn btn-Voltar">Voltar</a>
+</section>
+<div id="fade">
+	<div id="modal" class="modal">
+		<button id="closeModal" class="btn"><i class="fa fa-close"></i></button>
+		<div id="conteudoModalMusculo">
+			<h5></h5>
+			<hr />
+			<div class="listMuscle">
+				<select>
+					@foreach (var muscle in Model.Muscles!)
+					{
+						<option id="@muscle.Id">@muscle.Name</option>
+					}
+				</select>
+				<button id="btnGetMuscleinList" class="icon-btn add-btn">
+					<div class="add-icon"></div>
+					<div class="btn-txt">Adicionar</div>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<section>
+	<div class="centralizar">
+		@using (Html.BeginForm("Edit", "Exercises", FormMethod.Post, htmlAttributes: new { @id = "ExerciseForm" }))
+		{
+			@Html.AntiForgeryToken()
+			<div>
+				<input asp-for="Exercise.Id" hidden value="@Model.Exercise!.Id">
+				<div class="group">
+					@Html.EditorFor(model => model.Exercise!.Name, new { htmlAttributes = new { @class = "input", @placeholder = @Model.Exercise!.Name } })
+					<span class="bar"></span>
+					@Html.LabelFor(model => model.Exercise!.Name, htmlAttributes: new { @class = "inputTitle" })
+					<span asp-validation-for="Exercise!.Name" class="text-danger"></span>
+				</div>
+				<button id="btnLista" class="btn btn-adicionar-Musculo" type="button">Selecione o músculo</button>
+				<p></p>
+				@foreach(var muscle in Model.Exercise.Muscles)
+				{
+					<p style="font-weight:500">Músculo deste exercício: - <span id="CreatedMuscleOrSelectedText">@muscle.Name</span> <input type='checkbox' name='createOrSelectedMuscle' id='createOrSelectedMuscleIdName' class='createOrSelectedMuscle' checked='checked' value='@muscle.Id-@muscle.Name'></p>
+				}
+				<span id="muscleValidation" class="text-danger"></span>
+			</div>
+			<div style="margin-top:3%;">
+				<button type="submit" class="btn btn-adicionar">Avançar</button>
+			</div>
+		}
+	</div>
+</section>
+@section Scripts{
+<script src="@Url.Content("~/js/exerciseCreate.js")" type="text/javascript"></script>
 @{
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
 }

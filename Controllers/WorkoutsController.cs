@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WorkoutTracker.Models;
 using WorkoutTracker.Models.ViewModel;
 using WorkoutTracker.Services;
-
+using WorkoutTracker.Services.Exceptions;
 
 namespace WorkoutTracker.Controllers
 {
@@ -24,9 +24,10 @@ namespace WorkoutTracker.Controllers
         //TODO: CRIAR PÁGINA PARA ADICIONAR NOVAS CATEGORIAS
         //TODO: CRIAR PÁGINAS DE ESTATÍSTICA
         //TODO: CRIAR FUNÇÕES DA PÁGINA ESTATÍSTICA
-        //TODO: ADICIONAR EDIÇÃO E DELEÇÃO DE EXERCÍCIOS
-        //TODO: VERIFICAR PORQUE ADICONAR PELA CATEGORIA NÃO ESTÁ FUNCIONANDO
-        
+        //TODO: ADICIONAR DELEÇÃO DE EXERCÍCIOS
+        //TODO: EDITAR MEDIA SCREEN EXERCISE CREATE, EDIT E DELETE
+        //TODO: ADICIONAR VALIDAÇÃO CRIAR EXERCÍCIO NO MÚSCULO SELECIONADO
+
 
         // GET: WorkoutsController
         public async Task<ActionResult> Index()
@@ -36,16 +37,17 @@ namespace WorkoutTracker.Controllers
         }
 
         // GET: WorkoutsController/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int id)
         {
-            if (id != null)
+            if (id != 0)
             {
-                var workout = await _workoutService.FindByIdAsync((int)id);
-                if (workout == null)
+                var workout = await _workoutService.FindByIdAsync(id);
+                if (workout != null)
                 {
-                    return View("Error");
+                    return View(workout);
+
                 }
-                return View(workout);
+                return NotFound();
             }
             return BadRequest();
         }
@@ -173,11 +175,19 @@ namespace WorkoutTracker.Controllers
         // GET: WorkoutsController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var listExercises = await _exerciseService.FindAllAsync();
-            var listCategories = await _categoryService.FindAllAsync();
-            var workout = await _workoutService.FindByIdAsync(id);
-            CreateFormViewModel viewModel = new CreateFormViewModel { Categories = listCategories, Exercises = listExercises, Workout = workout };
-            return View(viewModel);
+            if (id != 0)
+            {
+                var workout = await _workoutService.FindByIdAsync(id);
+                if (workout != null)
+                {
+                    var listExercises = await _exerciseService.FindAllAsync();
+                    var listCategories = await _categoryService.FindAllAsync();
+                    CreateFormViewModel viewModel = new CreateFormViewModel { Categories = listCategories, Exercises = listExercises, Workout = workout };
+                    return View(viewModel);
+                }
+                return NoContent();
+            }
+            return NoContent();
         }
 
         // POST: WorkoutsController/Edit/5
@@ -230,25 +240,28 @@ namespace WorkoutTracker.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditSetsAndRepsPost(Workout workout)
         {
-
-            var listExIdSetsReps = Request.Form["SetsReps"];
-            Workout workoutToBeEdited = await _workoutService.FindByIdAsync(workout.Id);
-
-            if (workoutToBeEdited == null)
+            try
             {
-                return BadRequest();
-            }
+                var listExIdSetsReps = Request.Form["SetsReps"];
+                Workout workoutToBeEdited = await _workoutService.FindByIdAsync(workout.Id);
 
-            var formExerciseCount = Request.Form["quantityOfExercises"].ToString();
-            int quantityOfExercises;
-            bool success = int.TryParse(formExerciseCount, out quantityOfExercises);
-            if (!success)
-            {
-                return NoContent();
-            }
+                if (workoutToBeEdited == null)
+                {
+                    return BadRequest();
+                }
 
-            if (!string.IsNullOrEmpty(listExIdSetsReps))
-            {
+                var formExerciseCount = Request.Form["quantityOfExercises"].ToString();
+                int quantityOfExercises;
+                bool success = int.TryParse(formExerciseCount, out quantityOfExercises);
+                if (!success)
+                {
+                    return NoContent();
+                }
+
+                if (string.IsNullOrEmpty(listExIdSetsReps))
+                {
+                    return NoContent();
+                }
                 string[] initialSplit = listExIdSetsReps.ToString().Split(",");
                 if (quantityOfExercises > initialSplit.Length)
                 {
@@ -260,7 +273,7 @@ namespace WorkoutTracker.Controllers
                 workoutToBeEdited.Name = workout.Name;
                 workoutToBeEdited.DateTime = workout.DateTime;
                 workoutToBeEdited.Duration = workout.Duration;
-                //Adicionando categoria
+                //Adicionando categoria (não é necessário que um treino tenha realmente uma categoria)
                 var categoriesId = HttpContext.Session.GetString("WorkoutCategoryIdEdit");
                 if (categoriesId != null)
                 {
@@ -288,28 +301,38 @@ namespace WorkoutTracker.Controllers
                 return RedirectToAction(nameof(Index));
 
             }
+            catch (DbConcurrencyException)
+            {
+                return BadRequest();
+            }
+            catch (NotFoundException)
+            {
+                return BadRequest();
+            }
 
-            return NoContent();
         }
         // GET: WorkoutsController/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        public async Task<ActionResult> Delete(int id)
         {
-            if (id == null)
+            if (id != 0)
             {
-                return NotFound();
+                var obj = await _workoutService.FindByIdAsync(id);
+                if (obj != null)
+                {
+                    return View(obj);
+
+                }
+                return NoContent();
             }
-            var obj = await _workoutService.FindByIdAsync((int)id);
-            if (obj == null)
-            {
-                return NotFound();
-            }
-            return View(obj);
+            return NoContent();
+
         }
 
         // POST: WorkoutsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id)
+        [ActionName("Delete")]
+        public async Task<ActionResult> DeletePost(int id)
         {
             try
             {

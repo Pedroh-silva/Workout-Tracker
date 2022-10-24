@@ -18,10 +18,10 @@ namespace WorkoutTracker.Services
         }
         public async Task<Exercise> FindByIdAsync(int id)
         {
-            var exercise = await _context.Exercise!.FirstOrDefaultAsync(x => x.Id == id);
+            var exercise = await _context.Exercise!.Include(x => x.Muscles).Include(x => x.Workouts).FirstOrDefaultAsync(x => x.Id == id);
             return exercise!;
         }
-        public async Task Insert(Exercise exercise)
+        public async Task InsertAsync(Exercise exercise)
         {
             _context.Add(exercise);
             await _context.SaveChangesAsync();
@@ -30,9 +30,16 @@ namespace WorkoutTracker.Services
         public async Task RemoveAsync(int id)
         {
             var obj = await _context.Exercise!.FindAsync(id);
-            _context.Exercise.Remove(obj!);
-            await _context.SaveChangesAsync();
-
+            try
+            {
+                _context.Exercise!.Remove(obj!);
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new ApplicationException("Something went wrong when removing this exercise.");
+            }
+            
         }
         public async Task UpdateAsync(Exercise obj)
         {
@@ -45,13 +52,20 @@ namespace WorkoutTracker.Services
             try
             {
                 _context.Update(obj);
-                _context.SaveChanges();
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException e)
             {
                 throw new DbConcurrencyException(e.Message);
             }
+        }
+        public bool ErrorReferentialIntegrity(Exercise obj)
+        {
+            if (obj!.Workouts.Count() != 0)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

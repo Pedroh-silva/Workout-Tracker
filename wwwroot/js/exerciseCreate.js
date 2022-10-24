@@ -23,8 +23,8 @@
         if (name.length == 0 || name == null || hasAnyNumber == true) {
             return alert("Por favor, preencha o campo corretamente.");
         }
-        $("#CreatedMuscleOrSelected").text(name);
-        $("#createOrSelectedMuscle").val("Create-"+name+"");
+        $("#CreatedMuscleOrSelectedText").text(name);
+        $("#createOrSelectedMuscleIdName").val("Create-"+name+"");
         fecharModal();
     });
    
@@ -49,8 +49,8 @@
                 id = $(this).attr('id');
             }
         });
-        $("#CreatedMuscleOrSelected").text(muscle);
-        $("#createOrSelectedMuscle").val(id + "-" + muscle);
+        $("#CreatedMuscleOrSelectedText").text(muscle);
+        $("#createOrSelectedMuscleIdName").val(id + "-" + muscle);
         fecharModal();
     });
     //FECHAR MODAL

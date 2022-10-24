@@ -45,7 +45,6 @@ namespace WorkoutTracker.Services
             try
             {
                 _context.Update(obj);
-                _context.SaveChanges();
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException e)

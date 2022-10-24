@@ -11,7 +11,7 @@
 
     
 }
-.flex-row{
+.flex-rowAndColumn{
     display:flex;
     flex-direction:row;
     justify-content:space-between;
@@ -58,7 +58,7 @@
     font-weight: 600;
 }
 #lista {
-    margin-top:20px;
+    margin-top: 20px;
     width: 500px;
     height: 200px;
     border-radius: 10px;
@@ -66,18 +66,20 @@
     box-shadow: var(--neumorphism);
     padding: 20px 0 20px 0;
     overflow-y: auto;
-    overflow-x: hidden;
     border: var(--box-border);
     text-align: center;
+    overflow-x: hidden;
 }
 #lista select{
     margin-bottom:20px;
 }
-#lista div{
-    text-align:left;
-    padding-left:10px;
-    font-size:18px;
-}
+    #lista div {
+        text-align: left;
+        padding-left: 10px;
+        font-size: 18px;
+        text-overflow: ellipsis;
+        overflow-x: hidden;
+    }
 
     #lista::-webkit-scrollbar {
         width: 8px;
@@ -109,4 +111,41 @@
 option {
     color: #171717;
     background-color: var(--bg-body);
+}
+#editDelete {
+    float: right;
+    background:none;
+}
+#editDelete a{
+    margin-right:5px;
+    text-decoration:none;
+}
+    #editDelete a:last-child {
+        margin-right: 20px;
+    }
+    #editDelete i {
+        color: lightslategray;
+        transition: 0.5s;
+    }
+#editDelete .fa-trash:hover{
+    color:darkred;
+    
+}
+    #editDelete .fa-pencil-square-o:hover{
+        color:#0031cf;
+        
+    }
+
+@media screen and (max-width:991px) {
+    .flex-rowAndColumn {
+        display: flex;
+        align-items:center;
+        flex-direction: column;
+    }
+}
+@media screen and (max-width:565px){
+    #lista {
+        width: 300px;
+        height: 200px;
+    }
 }
