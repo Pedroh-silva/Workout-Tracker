@@ -24,10 +24,6 @@ namespace WorkoutTracker.Controllers
         //TODO: CRIAR PÁGINA PARA ADICIONAR NOVAS CATEGORIAS
         //TODO: CRIAR PÁGINAS DE ESTATÍSTICA
         //TODO: CRIAR FUNÇÕES DA PÁGINA ESTATÍSTICA
-        //TODO: ADICIONAR DELEÇÃO DE EXERCÍCIOS
-        //TODO: EDITAR MEDIA SCREEN EXERCISE CREATE, EDIT E DELETE
-        //TODO: ADICIONAR VALIDAÇÃO CRIAR EXERCÍCIO NO MÚSCULO SELECIONADO
-
 
         // GET: WorkoutsController
         public async Task<ActionResult> Index()
@@ -156,7 +152,7 @@ namespace WorkoutTracker.Controllers
                 var workoutjustAdded = await _workoutService.FindLastinDbAsync();
 
                 var setsAndReps = CreateListOfSetsAndReps(initialSplit, workoutjustAdded.Id);
-
+                //Refetorar para evitar várias consultas no banco de dados
                 foreach (var obj in setsAndReps)
                 {
                     var exercise = await _exerciseService.FindByIdAsync(obj.ExerciseId);

@@ -58,6 +58,11 @@
         
         fecharModal();
     });
+    var divModal = document.querySelector('div.modal')
+    fade.on('click', function (e) {
+        var fora = !divModal.contains(e.target)
+        if (fora) fecharModal();
+    })
     //VALIDAÇÃO
     function hasNumber(name) {
         var numbers = /[0-9]/g;
@@ -66,7 +71,7 @@
         return false;
     }
     $("#ExerciseForm").submit(function (e) {
-        var muscleCreated = $("#CreatedMuscleOrSelected");
+        var muscleCreated = $("#createOrSelectedMuscleIdName");
         if (muscleCreated.is(":empty")) {
             $("#muscleValidation").text("Por favor, adicione ou crie um músculo")
             e.preventDefault();

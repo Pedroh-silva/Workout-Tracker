@@ -52,10 +52,11 @@
 					@Html.LabelFor(model => model.Exercise!.Name, htmlAttributes: new { @class = "inputTitle" })
 					<span asp-validation-for="Exercise!.Name" class="text-danger"></span>
 				</div>
-				<button id="btnCriarMuscle"  class="btn btn-adicionar-Musculo" type="button">Adicionar novo músculo</button>
-				
-				<button id="btnLista" class="btn btn-adicionar-Musculo" type="button">Adicionar músculo já existente</button>
-				<p></p>
+				<div id="buttons">
+					<button id="btnCriarMuscle" class="btn btn-adicionar-Musculo" type="button">Adicionar novo músculo</button>
+
+					<button id="btnLista" class="btn btn-adicionar-Musculo" type="button">Adicionar músculo já existente</button>
+				</div>
 				<p style="font-weight:500">Músculo deste exercício: - <span id="CreatedMuscleOrSelectedText"></span> <input type='checkbox' name='createOrSelectedMuscle' id='createOrSelectedMuscleIdName' class='createOrSelectedMuscle' checked='checked' value=''></p>
 				<span id="muscleValidation" class="text-danger"></span>
 			</div>

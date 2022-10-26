@@ -149,3 +149,8 @@ option {
         height: 200px;
     }
 }
+@media screen and (max-width:355px) {
+    .card{
+        width:250px;
+    }
+}

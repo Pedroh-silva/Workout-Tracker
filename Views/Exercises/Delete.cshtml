@@ -2,6 +2,7 @@
 <link rel="stylesheet" href='~/css/ExerciseDelete.css' />
 <h1>Gostaria de remover este exercício?</h1>
 <hr />
+<a class="btn btn-Voltar" asp-action="Index">Voltar</a>
 <div>
 	<div class="inputColumn">
 		<h4>Nome: @Model.Name</h4>
@@ -19,8 +20,7 @@
 	<form asp-action="Delete">
 		@Html.AntiForgeryToken()
 		<input type="hidden" asp-for="Id" />
-		<a class="btn btn-Voltar" asp-action="Index">Voltar</a>
-		<input type="submit" value="Remover" class="btn btn-Remover" />
+		<button type="submit" class="btn btn-Remover">Remover</button>
 	</form>
 </div>
 @section Scripts{

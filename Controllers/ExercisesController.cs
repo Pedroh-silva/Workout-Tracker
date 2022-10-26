@@ -141,7 +141,7 @@ namespace WorkoutTracker.Controllers
             }
             catch(DbConcurrencyException ex)
             {
-                return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "Ops! um bug encontrado, entre em contato com o desenvolvedor" });
+                return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "" });
             }
         }
 

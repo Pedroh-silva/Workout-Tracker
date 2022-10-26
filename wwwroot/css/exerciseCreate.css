@@ -1,13 +1,30 @@
 ﻿
-.listMuscle{
-    display:none;
-    margin-top:20px;
+.listMuscle {
+    display: none;
+    margin-top: 20px;
 }
-.listMuscle select{
-    width:200px;
-    border-radius:10px;
-    height:50px;
+
+    .listMuscle select {
+        width: 200px;
+        border-radius: 10px;
+        height: 50px;
+    }
+
+#buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
 }
+
+    #buttons button {
+        width: 500px;
+    }
+
+        #buttons button:first-child {
+            margin-bottom: 10px;
+        }
+
 .modal {
     position: initial;
     color: var(--text-color);
@@ -23,6 +40,7 @@
     width: 50px;
     height: 50px;
 }
+
 .icon-btn {
     width: 50px;
     height: 50px;
@@ -120,22 +138,28 @@
     height: 4px;
     top: calc(50% - 2px);
 }
-#closeModal{
-    float:right;
-    margin-top:-15px;
+
+#closeModal {
+    float: right;
+    margin-top: -15px;
 }
-#closeModal:hover {
-    color: gray;
+
+    #closeModal:hover {
+        color: gray;
+    }
+
+#conteudoModalMusculo {
+    display: none;
 }
-#conteudoModalMusculo{
-    display:none;
+
+#addNewMuscle {
+    display: none;
 }
-#addNewMuscle{
-   display:none;
+
+#createOrSelectedMuscleIdName {
+    display: none;
 }
-#createOrSelectedMuscleIdName{
-    display:none;
-}
+
 .btn-adicionar-Musculo {
     overflow: hidden;
     position: relative;
@@ -169,3 +193,130 @@
         -webkit-transition: all 850ms cubic-bezier(0.19, 1, 0.22, 1);
         transition: all 850ms cubic-bezier(0.19, 1, 0.22, 1);
     }
+
+@media screen and (max-width:767px) {
+    #buttons button {
+        width: 300px;
+    }
+}
+
+@media screen and (max-width:575px) {
+    @keyframes modalScale-up {
+        0% {
+            width: 20px;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        100% {
+            width: 420px;
+            height: 160px;
+            overflow-y: auto;
+        }
+    }
+
+    @keyframes modalScale-down {
+        0% {
+            width: 420px;
+            height: 160px;
+            overflow: hidden;
+        }
+
+        100% {
+            width: 20px;
+            height: 20px;
+            overflow: hidden;
+        }
+    }
+
+    #addNewMuscle {
+        flex-direction: row;
+    }
+
+    @media screen and (max-width:425px) {
+        @keyframes modalScale-up {
+            0% {
+                width: 20px;
+                height: 20px;
+                overflow: hidden;
+            }
+
+            100% {
+                width: 330px;
+                height: 160px;
+                overflow-y: auto;
+            }
+        }
+
+        @keyframes modalScale-down {
+            0% {
+                width: 330px;
+                height: 160px;
+                overflow: hidden;
+            }
+
+            100% {
+                width: 20px;
+                height: 20px;
+                overflow: hidden;
+            }
+        }
+
+        .listMuscle select {
+            width: 150px;
+        }
+
+        .icon-btn {
+            margin-left: 20px;
+        }
+    }
+
+    @media screen and (max-width:320px) {
+        .icon-btn {
+            margin-left: 0;
+        }
+        #buttons button {
+            width: 200px;
+            font-size: 12px;
+        }
+        @keyframes modalScale-up {
+            0% {
+                width: 20px;
+                height: 20px;
+                overflow: hidden;
+            }
+
+            100% {
+                width: 250px;
+                height: 250px;
+                overflow-y: auto;
+            }
+        }
+
+        @keyframes modalScale-down {
+            0% {
+                width: 250px;
+                height: 250px;
+                overflow: hidden;
+            }
+
+            100% {
+                width: 20px;
+                height: 20px;
+                overflow: hidden;
+            }
+        }
+        #addNewMuscle{
+            flex-direction:column;
+            align-items:center;
+        }
+        .listMuscle {
+            display:flex!important;
+            flex-direction: column-reverse;
+            align-items: center;
+        }
+        #btnGetMuscleinList{
+            margin-bottom:10px;
+        }
+    }
+}
