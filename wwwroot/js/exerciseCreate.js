@@ -72,11 +72,10 @@
     }
     $("#ExerciseForm").submit(function (e) {
         var muscleCreated = $("#createOrSelectedMuscleIdName");
-        if (muscleCreated.is(":empty")) {
+        if (!muscleCreated.val()) {
             $("#muscleValidation").text("Por favor, adicione ou crie um músculo")
             e.preventDefault();
         }
-        
     });
     //
     function fecharModal() {

@@ -1,14 +1,23 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WorkoutTracker.Models;
+using WorkoutTracker.Services;
 
 namespace WorkoutTracker.Controllers
 {
     public class CategoriesController : Controller
     {
-        // GET: CategoriesController
-        public ActionResult Index()
+        private readonly CategoryService _categoryService;
+        public CategoriesController(CategoryService categoryService)
         {
-            return View();
+            _categoryService = categoryService;
+        }
+        // GET: CategoriesController
+        public async Task<ActionResult> Index()
+        {
+            var allCategories= await _categoryService.FindAllAsync();
+            return View(allCategories);
         }
 
         // GET: CategoriesController/Details/5
@@ -26,15 +35,22 @@ namespace WorkoutTracker.Controllers
         // POST: CategoriesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> CreateAsync(Category category)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var categoryColor = Request.Form["categoryColor"];
+                if (!string.IsNullOrEmpty(category.Name) && !string.IsNullOrEmpty(categoryColor))
+                {
+                    category.Color = categoryColor.ToString();
+                    await _categoryService.Insert(category);
+                    return RedirectToAction(nameof(Index));
+                }
+                return NoContent();
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "" });
             }
         }
 
@@ -78,6 +94,16 @@ namespace WorkoutTracker.Controllers
             {
                 return View();
             }
+        }
+        public ActionResult Error(string message, string solution)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                Solution = solution,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+            return View(viewModel);
         }
     }
 }

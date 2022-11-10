@@ -1,1 +1,50 @@
-﻿
+﻿@model ICollection<WorkoutTracker.Models.Category>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="~/css/Category.css" />
+<link rel="stylesheet" href="~/css/index.css" />
+<h1>Categorias</h1>
+<hr />
+<div id="fade">
+	<div class="modal">
+		<button id="closeModal" class="btn"><i class="fa fa-close"></i></button>
+		<div id="conteudo">
+			<h3>Editar ou remover a categoria?</h3>
+			<hr />
+			<div class="flex-center">
+				<a class="btn button editar"> Editar </a>
+				<a class="btn button remover"> Remover </a>
+			</div>
+		</div>
+	</div>
+</div>
+<section>
+	<a asp-action="Create" class="btn btn-adicionar">Adicionar nova categoria</a>
+</section>
+<section id="flexRow">
+	@if (Model.Count == 0)
+	{
+		<h3 style="margin-top:100px;">Nenhuma categoria adicionada...</h3>
+	}
+	else
+	{
+		@foreach (var category in Model)
+		{
+			<div class="boxCategoria">
+				<p>@category.Name</p>
+				<div style="background-color:@category.Color" class="corCategoria"></div>
+				<div id="conteudoCategoria">
+					<p>Treinos desta categoria: @category.Workouts.Count</p>
+					<i id="edit" class='fas fa-pen' itemid="@category.Id"></i>
+				</div>
+			</div>
+		}
+	}
+</section>
+@section Scripts{
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<script src="~/js/CategoryIndex.js"></script>
+@{
+	await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
