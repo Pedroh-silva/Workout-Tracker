@@ -64,6 +64,7 @@ namespace WorkoutTracker.Controllers
                     if (hasAnyIdOrIsCreating)
                     {
                         var muscle = await _muscleService.FindByIdAsync(muscleId);
+                        if (muscle == null) throw new NotFoundException("Muscle Id not found");
                         exercise.Muscles.Add(muscle);
                     }
                     else
@@ -112,6 +113,7 @@ namespace WorkoutTracker.Controllers
                 if (!string.IsNullOrEmpty(exercise.Name) && !string.IsNullOrEmpty(muscleIdAndName) && exercise.Id != 0)
                 {
                     var exerciseInDb = await _exerciseService.FindByIdAsync(exercise.Id);
+                    if (exerciseInDb == null) throw new NotFoundException("Id not found");
                     string[] splittedData = muscleIdAndName.ToString().Split("-");
                     int muscleId;
                     bool isSuccess = int.TryParse(splittedData[0], out muscleId);
@@ -130,8 +132,11 @@ namespace WorkoutTracker.Controllers
                         {
                             return NoContent();
                         }
-                        exerciseInDb.Muscles.Clear();
                         var muscle = await _muscleService.FindByIdAsync(muscleId);
+                        if (muscle == null) throw new NotFoundException("Muscle Id not found");
+                        exerciseInDb.Muscles.Clear();
+                        
+
                         exerciseInDb.Muscles.Add(muscle);
                     }
                     await _exerciseService.UpdateAsync(exerciseInDb);
@@ -140,6 +145,10 @@ namespace WorkoutTracker.Controllers
                 return NoContent();
             }
             catch(DbConcurrencyException ex)
+            {
+                return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "" });
+            }
+            catch (NotFoundException ex)
             {
                 return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "" });
             }
@@ -171,10 +180,9 @@ namespace WorkoutTracker.Controllers
             {
                 var exercise = await _exerciseService.FindByIdAsync(id);
 
-                if (_exerciseService.ErrorReferentialIntegrity(exercise))
-                {
-                    throw new Referential_IntegrityException("You cannot remove this exercise, it is registered in a Workout.");
-                }
+                if (exercise == null) throw new NotFoundException("Id not found");
+                if (_exerciseService.ErrorReferentialIntegrity(exercise)) throw new Referential_IntegrityException
+                        ("You cannot remove this exercise, it is registered in a Workout.");
 
                 await _muscleService.RemoveMuscleByExerciseIdAsync(id);
                 await _exerciseService.RemoveAsync(id);
@@ -185,6 +193,10 @@ namespace WorkoutTracker.Controllers
             catch (Referential_IntegrityException ex)
             {
                 return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "You will need to remove the workout(s) first" });
+            }
+            catch (NotFoundException ex)
+            {
+                return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "" });
             }
         }
         public ActionResult Error(string message, string solution)

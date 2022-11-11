@@ -18,7 +18,7 @@ namespace WorkoutTracker.Services
         }
         public async Task<Category> FindByIdAsync(int id)
         {
-            var category = await _context.Category!.FirstOrDefaultAsync(x => x.Id == id);
+            var category = await _context.Category!.Include(x => x.Workouts).FirstOrDefaultAsync(x => x.Id == id);
             return category!;
         }
         public async Task Insert(Category category)
@@ -27,7 +27,7 @@ namespace WorkoutTracker.Services
             await _context.SaveChangesAsync();
 
         }
-        public async Task Remove(int id)
+        public async Task RemoveAsync(int id)
         {
             var obj = await _context.Category!.FindAsync(id);
             _context.Category.Remove(obj!);

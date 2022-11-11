@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WorkoutTracker.Models;
 using WorkoutTracker.Services;
+using WorkoutTracker.Services.Exceptions;
 
 namespace WorkoutTracker.Controllers
 {
@@ -16,7 +17,7 @@ namespace WorkoutTracker.Controllers
         // GET: CategoriesController
         public async Task<ActionResult> Index()
         {
-            var allCategories= await _categoryService.FindAllAsync();
+            var allCategories = await _categoryService.FindAllAsync();
             return View(allCategories);
         }
 
@@ -76,23 +77,40 @@ namespace WorkoutTracker.Controllers
         }
 
         // GET: CategoriesController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            if (id != 0)
+            {
+                var category = await _categoryService.FindByIdAsync(id);
+                if (category != null)
+                {
+                    return View(category);
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return NoContent();
         }
 
         // POST: CategoriesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [ActionName("Delete")]
+        public async Task<ActionResult> DeletePost(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (id != 0)
+                {
+                    var category = await _categoryService.FindByIdAsync(id);
+                    if (category == null) throw new NotFoundException("Id not found!");
+                    await _categoryService.RemoveAsync(id);
+                    return RedirectToAction(nameof(Index));
+                }
+                throw new NotFoundException("Id not found!");
             }
-            catch
+            catch (NotFoundException ex)
             {
-                return View();
+                return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "" });
             }
         }
         public ActionResult Error(string message, string solution)

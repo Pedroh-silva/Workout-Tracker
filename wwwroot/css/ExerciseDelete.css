@@ -21,3 +21,10 @@
 .btn-Voltar{
     margin-bottom:20px;
 }
+h4 {
+    color: var(--text-color);
+}
+span {
+    color: #747474;
+   
+}

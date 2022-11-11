@@ -1,0 +1,15 @@
+﻿#color {
+    height: 50px;
+    width: 300px;
+    background-color: var( --body-bg);
+    border-radius:10px;
+    filter:drop-shadow(0 1px 1px #000000);
+}
+div #colors{
+    display:flex;
+    flex-direction: row;
+    flex-wrap:wrap
+}
+div #colors h4{
+    margin-right:10px;
+}

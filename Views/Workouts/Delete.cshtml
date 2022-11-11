@@ -16,6 +16,7 @@
 		</ul>
 	</div>
 	<form asp-action="Delete">
+		@Html.AntiForgeryToken()
 		<input type="hidden" asp-for="Id" />
 		<a class="btn btn-Voltar" asp-action="Index">Voltar</a>
 		<input type="submit" value="Remover" class="btn btn-Remover" />

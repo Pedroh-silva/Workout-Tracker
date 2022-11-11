@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WorkoutTracker.Models;
 using WorkoutTracker.Models.ViewModel;
@@ -152,7 +153,7 @@ namespace WorkoutTracker.Controllers
                 var workoutjustAdded = await _workoutService.FindLastinDbAsync();
 
                 var setsAndReps = CreateListOfSetsAndReps(initialSplit, workoutjustAdded.Id);
-                //Refetorar para evitar várias consultas no banco de dados
+
                 foreach (var obj in setsAndReps)
                 {
                     var exercise = await _exerciseService.FindByIdAsync(obj.ExerciseId);
@@ -240,11 +241,7 @@ namespace WorkoutTracker.Controllers
             {
                 var listExIdSetsReps = Request.Form["SetsReps"];
                 Workout workoutToBeEdited = await _workoutService.FindByIdAsync(workout.Id);
-
-                if (workoutToBeEdited == null)
-                {
-                    return BadRequest();
-                }
+                if (workoutToBeEdited == null) throw new NotFoundException("Id not found");
 
                 var formExerciseCount = Request.Form["quantityOfExercises"].ToString();
                 int quantityOfExercises;
@@ -301,9 +298,9 @@ namespace WorkoutTracker.Controllers
             {
                 return BadRequest();
             }
-            catch (NotFoundException)
+            catch (NotFoundException ex)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "" });
             }
 
         }
@@ -332,12 +329,14 @@ namespace WorkoutTracker.Controllers
         {
             try
             {
+                var workout = await _workoutService.FindByIdAsync(id);
+                if(workout == null) throw new NotFoundException("Id not found");
                 await _workoutService.RemoveAsync(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (NotFoundException ex)
             {
-                return View();
+                return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "" });
             }
         }
         public async Task<ActionResult> AddByCategory()
@@ -363,6 +362,7 @@ namespace WorkoutTracker.Controllers
                     var duration = TimeSpan.Parse(durationforms);
                     var id = int.Parse(Request.Form["WorkoutId"].ToString());
                     var workoutInDb = await _workoutService.FindByIdAsync(id);
+                    if (workoutInDb == null) throw new NotFoundException("Id not found");
                     Workout workout = new Workout { Name = workoutInDb.Name, DateTime = dateTime, Duration = duration };
 
                     HttpContext.Session.SetString("WorkoutExercisesId", exercisesId);
@@ -376,10 +376,20 @@ namespace WorkoutTracker.Controllers
                 }
                 return NoContent();
             }
-            catch
+            catch (NotFoundException ex)
             {
-                return View();
+                return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "" });
             }
+        }
+        public ActionResult Error(string message, string solution)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                Solution = solution,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+            return View(viewModel);
         }
         private bool isExerciseFormNull(string form)
         {
