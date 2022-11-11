@@ -7,7 +7,7 @@
 <div>
 	<div class="inputColumn">
 		<h4>Nome: <span>@Model.Name</span></h4>
-		<h4>Quantidade de treinos cadastrados nesta categoria: <span>@Model.Workouts.Count()</span></h4>
+		<h4 id="quantTreino">Quantidade de treinos cadastrados: <span>@Model.Workouts.Count()</span></h4>
 		<div id="colors">
 			<h4>Cor:</h4>
 			<div style="background-color:@Model.Color" id="color"></div>

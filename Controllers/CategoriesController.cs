@@ -21,12 +21,6 @@ namespace WorkoutTracker.Controllers
             return View(allCategories);
         }
 
-        // GET: CategoriesController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: CategoriesController/Create
         public ActionResult Create()
         {
@@ -36,14 +30,12 @@ namespace WorkoutTracker.Controllers
         // POST: CategoriesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync(Category category)
+        public async Task<ActionResult> Create(Category category)
         {
             try
             {
-                var categoryColor = Request.Form["categoryColor"];
-                if (!string.IsNullOrEmpty(category.Name) && !string.IsNullOrEmpty(categoryColor))
+                if (!string.IsNullOrEmpty(category.Name) && !string.IsNullOrEmpty(category.Color))
                 {
-                    category.Color = categoryColor.ToString();
                     await _categoryService.Insert(category);
                     return RedirectToAction(nameof(Index));
                 }
@@ -56,23 +48,34 @@ namespace WorkoutTracker.Controllers
         }
 
         // GET: CategoriesController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            if(id != 0)
+            {
+                var category = await _categoryService.FindByIdAsync(id);
+                if (category == null) return NoContent();
+                return View(category);
+            }
+            return NoContent();
         }
 
         // POST: CategoriesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(Category category)
         {
             try
             {
+                var categoryToBeEdited = await _categoryService.FindByIdAsync(category.Id);
+                if (categoryToBeEdited == null) throw new NotFoundException("Id not found!");
+                categoryToBeEdited.Name = category.Name;
+                categoryToBeEdited.Color = category.Color;
+                await _categoryService.UpdateAsync(categoryToBeEdited);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(NotFoundException ex)
             {
-                return View();
+                return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "" });
             }
         }
 

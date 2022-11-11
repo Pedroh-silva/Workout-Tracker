@@ -25,7 +25,7 @@
 				<p></p>
 				<input id="colorPicker" type="color" value="#002600">
 				<span asp-validation-for="Color" class="text-danger"></span>
-				<input hidden id="categoryColor" name="categoryColor" value="#002600">
+				<input type="hidden" id="categoryColor" asp-for="Color" value="#002600">
 			</div>
 			<div style="margin-top:3%;">
 				<button type="submit" class="btn btn-adicionar">Avançar</button>
