@@ -14,7 +14,7 @@ namespace WorkoutTracker.Services
         }
         public async Task<List<Workout>> FindAllAsync()
         {
-            return await _context.Workout!.Include(x => x.Exercises).ThenInclude(x => x.SetsAndReps).Include(x => x.Categories).OrderByDescending(x => x.DateTime).ToListAsync();
+            return await _context.Workout!.Include(x => x.Exercises).ThenInclude(x => x.SetsAndReps).Include(x => x.Exercises).ThenInclude(x => x.Muscles).Include(x => x.Categories).OrderByDescending(x => x.DateTime).ToListAsync();
         }
         public async Task<Workout> FindByIdAsync(int id)
         {

@@ -14,17 +14,16 @@ namespace WorkoutTracker.Controllers
         private readonly ExerciseService _exerciseService;
         private readonly CategoryService _categoryService;
         private readonly SetsAndRepsService _setsAndRepsService;
-        public WorkoutsController(WorkoutService workoutService, ExerciseService exerciseService, CategoryService categoryService, SetsAndRepsService setsAndRepsService)
+        private readonly StatisticService _statisticService;
+        public WorkoutsController(WorkoutService workoutService, ExerciseService exerciseService, CategoryService categoryService, SetsAndRepsService setsAndRepsService, StatisticService statisticService)
         {
             _workoutService = workoutService;
             _exerciseService = exerciseService;
             _categoryService = categoryService;
             _setsAndRepsService = setsAndRepsService;
+            _statisticService = statisticService;
 
         }
-        //TODO: CRIAR PÁGINA PARA ADICIONAR NOVAS CATEGORIAS
-        //TODO: CRIAR PÁGINAS DE ESTATÍSTICA
-        //TODO: CRIAR FUNÇÕES DA PÁGINA ESTATÍSTICA
 
         // GET: WorkoutsController
         public async Task<ActionResult> Index()
@@ -380,6 +379,46 @@ namespace WorkoutTracker.Controllers
             {
                 return RedirectToAction(nameof(Error), new { message = ex.Message, solution = "" });
             }
+        }
+        public async Task<ActionResult> Statistic()
+        {
+            var workouts = await _workoutService.FindAllAsync();
+            Statistic statistic = new Statistic();
+            if (workouts.Count != 0)
+            {
+                statistic.QuantityOfWorkouts = _statisticService.QuantityOfWorkouts(workouts);
+                statistic.AverageDuration = _statisticService.AverageDuration(workouts);
+                statistic.QuantityOfExercises = _statisticService.QuantityOfExercises(workouts);
+                statistic.AverageExercisesPerWorkout = _statisticService.AverageExercisesPerWorkout(workouts);
+                statistic.AllDuration = _statisticService.AllDuration(workouts);
+                statistic.MonthsWithAtLeastOneWorkout = _statisticService.MonthsWithAtLeastOneWorkout(workouts);
+
+                //Create pie graph from Google Charts API
+                var muscleDistribution = _statisticService.MuscleDistribution(workouts);
+                var quantityOfExercisesPerMuscleName = muscleDistribution.GroupBy(x => x).Select(y => new {y.Key, TotalExercises = y.Count() });
+                string data = "";
+                foreach(var obj in quantityOfExercisesPerMuscleName)
+                {
+                    data += "['" + obj.Key + "'," + obj.TotalExercises + "],";
+                }
+                data = data.Substring(0, data.Length - 1);
+                ViewBag.CreatePieGraph = _statisticService.CreatePieGraph("",data);
+                return View(statistic);
+            }
+            ViewBag.CreatePieGraph = "";
+            return View(statistic);
+
+        }
+        public async Task<PartialViewResult> GetWorkoutByMonth(string id)
+        {
+            var workouts = await _workoutService.FindAllAsync();
+            Statistic statistic = new Statistic();
+            statistic.QuantityOfWorkoutsMonthly = _statisticService.QuantityOfWorkoutsMonthly(workouts,id);
+            statistic.AverageDurationMonthly = _statisticService.AverageDurationMonthly(workouts, id);
+            statistic.QuantityOfExercisesMonthly = _statisticService.QuantityOfExercisesMonthly(workouts, id);
+            statistic.AverageExercisesPerWorkoutMonthly = _statisticService.AverageExercisesPerWorkoutMonthly(workouts, id);
+            statistic.AllDurationMonthly = _statisticService.AllDurationMonthly(workouts, id);
+            return PartialView(statistic);
         }
         public ActionResult Error(string message, string solution)
         {

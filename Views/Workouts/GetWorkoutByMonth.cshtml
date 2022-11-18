@@ -1,0 +1,34 @@
+﻿@model WorkoutTracker.Models.Statistic
+<link rel="stylesheet" href='~/css/Statistic.css' />
+<div id="infos">
+			<div id="statisticBox">
+				<p>Quantidade de exercícios</p>
+				<hr />
+				<p>@Model.QuantityOfExercisesMonthly</p>
+			</div>
+			<div id="statisticBox">
+				<p>Quantidade de treinos</p>
+				<hr />
+				<p>@Model.QuantityOfWorkoutsMonthly</p>
+			</div>
+		</div>
+		<div id="infos">
+			<div id="statisticBox">
+				<p>Média de exercícios por treino</p>
+				<hr />
+				<p>@Model.AverageExercisesPerWorkoutMonthly</p>
+			</div>
+			<div id="statisticBox">
+				<p>Duração média dos treinos</p>
+				<hr />
+				<p>@Model.AverageDurationMonthly.ToString(@"hh\:mm\:ss")</p>
+			</div>
+		</div>
+		<div id="infos">
+			<div id="statisticBox">
+				<p>Duração total</p>
+				<hr />
+				<p>@Model.AllDurationMonthly</p>
+			</div>
+		</div>
+

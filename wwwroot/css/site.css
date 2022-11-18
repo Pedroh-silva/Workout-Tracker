@@ -17,6 +17,8 @@
     --buttonSetsReps: #282936;
     --listColor: rgba(192,192,192,0.2);
     --btn-voltar: #5f5f5f;
+    --graph-BoxShadow: 1px 1px 10px #000000;
+    --statisticBox: #e1e1e1;
 }
 
 .darkmode:root {
@@ -38,6 +40,8 @@
     --buttonSetsReps: #74779D;
     --listColor: rgba(192,192,192,0.1);
     --btn-voltar: #5f5f5f;
+    --graph-BoxShadow: 1px 1px 10px #141414;
+    --statisticBox: #242424;
 }
 
 html {

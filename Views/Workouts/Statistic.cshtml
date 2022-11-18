@@ -1,1 +1,80 @@
-﻿
+﻿@model WorkoutTracker.Models.Statistic
+@{
+
+	//TODO: ADICIONAR A FUNÇÕES CRIADAS NO OUTRO PROGRAMA
+	/*TODO: MUDAR A FUNÇÃO DA ATIVIDADE MENSAL PARA UMA LISTA DOS MESES...
+	TREINADOS QUE É POSSÍVEL ALTERAR OS MESES E VISUALIZAR OS RESULTADOS*/
+	/*TODO: NA LISTA DE MESES TREINADOS USAR CSS DISPLAY NONE PARA ESCONDER RESULTADOS INDESEJADOS E COM JS
+	ATUALIZAR OS DADOS*/
+
+}
+<link rel="stylesheet" href='~/css/Statistic.css' />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<h1 class="title">Estatísticas</h1>
+<hr />
+<br />
+<section>
+	<a class="btn btn-Voltar" asp-action="Index">Voltar</a>
+</section>
+<section id="googleChart">
+	<div>
+		<h3>Distribuição de músculos</h3>
+		@Html.Raw(ViewBag.CreatePieGraph)
+	</div>
+</section>
+<section id="statistic">
+	<section id="monthly">
+		<h3>Atividade Mensal</h3>
+		<h6>
+			Mês: <select id="WorkoutsMonths">
+				<option id="selecionar">selecione</option>
+				@foreach(var months in Model.MonthsWithAtLeastOneWorkout)
+				{
+					<option id="@months">@months</option>
+				}
+				
+			</select>
+		</h6>
+		<div id="Treinos">
+			<h5 style="text-align:center">Selecione um mês...</h5>
+		</div>
+	</section>
+	<section id="total">
+		<h3>Atividade Total</h3>
+		<div id="infos">
+			<div id="statisticBox">
+				<p>Quantidade de exercícios</p>
+				<hr />
+				<p>@Model.QuantityOfExercises</p>
+			</div>
+			<div id="statisticBox">
+				<p>Quantidade de treinos</p>
+				<hr />
+				<p>@Model.QuantityOfWorkouts</p>
+			</div>
+		</div>
+		<div id="infos">
+			<div id="statisticBox">
+				<p>Média de exercícios por treino</p>
+				<hr />
+				<p>@Model.AverageExercisesPerWorkout</p>
+			</div>
+			<div id="statisticBox">
+				<p>Duração média dos treinos</p>
+				<hr />
+				<p>@Model.AverageDuration.ToString(@"hh\:mm\:ss")</p>
+			</div>
+		</div>
+		<div id="infos">
+			<div id="statisticBox">
+				<p>Duração total</p>
+				<hr />
+				<p>@Model.AllDuration</p>
+			</div>
+		</div>
+	</section>
+</section>
+@section Scripts{
+<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+<script src="@Url.Content("~/js/Statistic.js")" type="text/javascript"></script>
+}
