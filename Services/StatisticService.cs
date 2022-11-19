@@ -170,7 +170,7 @@ namespace WorkoutTracker.Services
                              
                             }
                             </script>
-                            <div id='donutchart_" + title.Replace(" ", "") + @"' style='min-height: 500px; '></div>";
+                            <div id='donutchart_" + title.Replace(" ", "") + @"'></div>";
             return graf;
         }
     }

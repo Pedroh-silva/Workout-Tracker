@@ -30,7 +30,7 @@
 
     //--------Pop up explicação para remover categoria -----------------------------------------------------------
     var gatilhoPopUpRemover = $('#categoriaSelecionada');
-    
+
     var popUpRemover = $('#pop-up-remover');
     gatilhoPopUpRemover.hover(function (e) {
         var texto = $('#categoriaSelecionada').text();
@@ -91,7 +91,7 @@
         $('#corCategoria_' + id).css("background", codigoCor);
     });
     //---------- Selecionar a Categoria ---------------------------------------
-    
+
     $('.categoria').on('click', function () {
         var name = $(this).children().eq(0).text();
         var id = $(this).children().eq(1).attr('itemid');
@@ -136,9 +136,37 @@
         if (duration == "00:00") {
             $("#validacaoTimer").text("A duração do treino não pode ser 00:00");
             e.preventDefault();
-            
+
         }
     });
+    //Filtro por músculo-------------------------------------------
+    $("#muscleFilter").change(function () {
+        var choice = $(this).val();
+        if (choice == "Todos") {
+            $('.boxExercicio').css('display', 'block')
+        }
+        else if (choice == "Selecionados") {
+            $('.boxExercicio').each(function () {
+                if (!$(this).hasClass("boxChecked")) {
+                    $(this).css('display', 'none')
+                }
+                else {
+                    $(this).css('display', 'block')
+                }
+            })
+        }
+        else{
+            $('.boxExercicio').each(function () {
+                var muscleName = $(this).children().eq(3).text()
+                if (muscleName != choice) {
+                    $(this).css('display', 'none')
+                }
+                else {
+                    $(this).css('display', 'block')
+                }
+            })
+        }
+    })
     //-------------------------------------------------------------
     function fechamentoModal() {
         if (clickBtnExercicio != 0) {
@@ -176,10 +204,10 @@
         //Voltar opacidade para caso um novo clique
         modal.animate({
             opacity: 1
-        },0);
+        }, 0);
         fade.animate({
             opacity: 1
-        },0);
+        }, 0);
     }
     function removerCategoria() {
         if (categoriaSelecionada.text() == " Nenhuma categoria selecionada...") {

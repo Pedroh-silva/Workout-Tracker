@@ -38,5 +38,8 @@
             },305)
         }
     })
-
+    $(window).resize(function () {
+        drawChart();
+        $("#donutchart_ svg").css('opacity', '1');
+    })
 });

@@ -15,13 +15,15 @@ namespace WorkoutTracker.Controllers
         private readonly CategoryService _categoryService;
         private readonly SetsAndRepsService _setsAndRepsService;
         private readonly StatisticService _statisticService;
-        public WorkoutsController(WorkoutService workoutService, ExerciseService exerciseService, CategoryService categoryService, SetsAndRepsService setsAndRepsService, StatisticService statisticService)
+        private readonly MuscleService _muscleService;
+        public WorkoutsController(WorkoutService workoutService, ExerciseService exerciseService, CategoryService categoryService, SetsAndRepsService setsAndRepsService, StatisticService statisticService, MuscleService muscleService)
         {
             _workoutService = workoutService;
             _exerciseService = exerciseService;
             _categoryService = categoryService;
             _setsAndRepsService = setsAndRepsService;
             _statisticService = statisticService;
+            _muscleService = muscleService;
 
         }
 
@@ -53,7 +55,8 @@ namespace WorkoutTracker.Controllers
         {
             var listExercises = await _exerciseService.FindAllAsync();
             var listCategories = await _categoryService.FindAllAsync();
-            CreateFormViewModel viewModel = new CreateFormViewModel { Categories = listCategories, Exercises = listExercises };
+            var listMuscles = await _muscleService.FindAllAsync();
+            CreateFormViewModel viewModel = new CreateFormViewModel { Categories = listCategories, Exercises = listExercises, Muscles = listMuscles };
             return View(viewModel);
         }
 

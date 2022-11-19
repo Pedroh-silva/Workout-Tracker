@@ -24,7 +24,17 @@
             return alert("Por favor, preencha o campo corretamente.");
         }
         $("#CreatedMuscleOrSelectedText").text(name);
-        $("#createOrSelectedMuscleIdName").val("Create-"+name+"");
+        $("#createOrSelectedMuscleIdName").val("Create-" + name + "");
+        //verificar se músculo existe---------
+        $.ajax({
+            url: '/Exercises/MuscleNameVerification/' + name,
+            type: 'GET',
+            dataType: 'html',
+            success: function (result) {
+                $("#hasMuscle").html(result);
+            }
+        })
+        //------------------------------
         fecharModal();
     });
    
@@ -51,6 +61,7 @@
         });
         $("#CreatedMuscleOrSelectedText").text(muscle);
         $("#createOrSelectedMuscleIdName").val(id + "-" + muscle);
+        $("#hasMuscle").html("");
         fecharModal();
     });
     //FECHAR MODAL
@@ -77,6 +88,7 @@
             e.preventDefault();
         }
     });
+  
     //
     function fecharModal() {
         conteudoModal.fadeOut("fast");

@@ -1,11 +1,6 @@
 ﻿@model WorkoutTracker.Models.Statistic
 @{
 
-	//TODO: ADICIONAR A FUNÇÕES CRIADAS NO OUTRO PROGRAMA
-	/*TODO: MUDAR A FUNÇÃO DA ATIVIDADE MENSAL PARA UMA LISTA DOS MESES...
-	TREINADOS QUE É POSSÍVEL ALTERAR OS MESES E VISUALIZAR OS RESULTADOS*/
-	/*TODO: NA LISTA DE MESES TREINADOS USAR CSS DISPLAY NONE PARA ESCONDER RESULTADOS INDESEJADOS E COM JS
-	ATUALIZAR OS DADOS*/
 
 }
 <link rel="stylesheet" href='~/css/Statistic.css' />
@@ -17,10 +12,8 @@
 	<a class="btn btn-Voltar" asp-action="Index">Voltar</a>
 </section>
 <section id="googleChart">
-	<div>
 		<h3>Distribuição de músculos</h3>
 		@Html.Raw(ViewBag.CreatePieGraph)
-	</div>
 </section>
 <section id="statistic">
 	<section id="monthly">

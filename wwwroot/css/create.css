@@ -217,12 +217,16 @@
     margin-right: 5px;
     margin-bottom: 5px;
     border: var(--border-boxSelecao);
+    
 }
-
-    .boxSelecao:last-child {
-        margin-right: 0;
-        margin-bottom: 0;
+    .boxSelecao p {
+        overflow:hidden;
+        text-overflow: ellipsis;
     }
+.boxSelecao:last-child {
+    margin-right: 0;
+    margin-bottom: 0;
+}
     .boxSelecao:hover {
         cursor: pointer;
         border-color: rgba(73,130,48,0.7);
@@ -231,6 +235,9 @@
 .boxExercicio {
     text-align: center;
     margin-right: 10px;
+    font-size: smaller;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
     .boxExercicio p:first-child {
         margin-bottom: -15px;

@@ -33,6 +33,17 @@
 		<div id="conteudoExercicio" class="conteudoModal">
 			<div>
 				<h3>Selecione o(s) exercício(s)</h3>
+				<div>
+					<span>Filtrar por:</span> 
+					<select id="muscleFilter">
+						<option id="todos">Todos</option>
+						<option id="selecionados">Selecionados</option>
+						@foreach(var muscle in Model.Muscles!)
+						{
+							<option id="@muscle.Name">@muscle.Name</option>
+						}
+					</select>
+				</div>
 				<hr />
 				<div class="flex-center flex-wrap">
 					@if (Model.Exercises!.Count == 0)

@@ -83,6 +83,18 @@ namespace WorkoutTracker.Controllers
                 return RedirectToAction(nameof(Error), new {message = ex.Message, solution = ""});
             }
         }
+        public async Task<string> MuscleNameVerification(string id)
+		{
+            var muscles = await _muscleService.FindAllAsync();
+            foreach(var muscle in muscles)
+			{
+                if(muscle.Name!.ToLower() == id.ToLower())
+				{
+                    return "Este músculo já existe! adicione no botão de \"músculo já existente\"";
+                }   
+			}
+            return "";
+        }
 
         // GET: ExercisesController/Edit/5
         public async Task<ActionResult> Edit(int id)
